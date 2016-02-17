@@ -84,6 +84,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 background.dy = (event.getY() - touchY) / 10;
 //                Log.d(NAME, background.dx + " x " + background.dy);
                 return true;
+            case MotionEvent.ACTION_UP:
+                background.dx = 0;
+                background.dy = 0;
+                touchX = -1;
+                touchY = -1;
+                return true;
         }
 
         return super.onTouchEvent(event);
