@@ -21,6 +21,7 @@ public class Background {
 
     public void update() {
         x += dx;
+        dx = 0;
         while(x < 0) {
             x += image.getWidth();
         }
@@ -34,6 +35,7 @@ public class Background {
         while(y >= image.getHeight()) {
             y -= image.getHeight();
         }
+        dy = 0;
 
     }
 
