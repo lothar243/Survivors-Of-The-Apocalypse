@@ -1,3 +1,5 @@
+package edu.umt.csdept.survivorsoftheapocalypse;
+
 public interface Card{
 
     public void draw();
