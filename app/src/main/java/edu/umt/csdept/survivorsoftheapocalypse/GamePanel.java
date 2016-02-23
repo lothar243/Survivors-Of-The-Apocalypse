@@ -3,6 +3,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,7 +17,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public static float backgoundWidth;
     public static float backgroundHeight;
-    public static final int MOVESPEED = -5;
     private MainThread thread;
     private Background background;
     public static float screenWidth;
@@ -73,7 +73,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchX = event.getX();
@@ -104,16 +104,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         final float scaleFactorX = getWidth()/ backgoundWidth;
         final float scaleFactorY = getHeight()/ backgroundHeight;
         super.draw(canvas);
-        if(canvas != null) {
-//            final int savedState = canvas.save();
-//            canvas.scale(scaleFactorX, scaleFactorY);
-            background.draw(canvas);
-//            canvas.restoreToCount(savedState);
-        }
+        background.draw(canvas);
     }
 }
 
+//todo 3 layouts: board (scrollable and zoomable), player stats, player actions (scrollable)
