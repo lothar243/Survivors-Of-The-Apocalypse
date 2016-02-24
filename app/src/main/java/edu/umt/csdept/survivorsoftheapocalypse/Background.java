@@ -2,6 +2,8 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.util.Log;
 
 /**
@@ -14,38 +16,32 @@ public class Background {
     private float x, y;
     public float dx = 0, dy = 0;
 
+    final int verticalGap = 10, horizontalGap = 10;
+
+    int hexWidth, hexHeight;
+
 
     public Background(Bitmap res) {
         image = res;
+        hexWidth = image.getWidth();
+        hexHeight = image.getHeight();
     }
 
     public void update() {
         x += dx;
         dx = 0;
-        while(x < 0) {
-            x += image.getWidth();
-        }
-        while(x >= image.getWidth()) {
-            x -= image.getWidth();
-        }
         y += dy;
-        while(y < 0) {
-            y += image.getHeight();
-        }
-        while(y >= image.getHeight()) {
-            y -= image.getHeight();
-        }
         dy = 0;
 
     }
 
     public void draw(Canvas canvas) {
         if(canvas != null) {
-            int numCols = (int)(GamePanel.screenWidth / image.getWidth());
-            int numRows = (int)(GamePanel.screenHeight / image.getHeight());
-            for(int col = -1; col < numCols + 2; col++) {
-                for (int row = -1; row < numRows + 2; row++) {
-                    canvas.drawBitmap(image, x + col * image.getWidth(), y + row * image.getHeight(), null);
+            canvas.drawColor(Color.WHITE);
+            for(int col = 0; col < 10; col++) {
+                for (int row = 0; row < 10; row++) {
+                    Point offset = gridOffset(row, col);
+                    canvas.drawBitmap(image, x + offset.x, y + offset.y, null);
                 }
             }
         }
@@ -63,5 +59,14 @@ public class Background {
             return image.getHeight();
         }
         return 0;
+    }
+
+    public Point gridOffset(int rowNum, int colNum) {
+        int xOffset = (int) (colNum * (1.5f * hexWidth + 2 * horizontalGap));
+        int yOffset = (int)(.5f * rowNum * (hexHeight + verticalGap));
+        if(rowNum % 2 == 1) {
+            xOffset -= (int)(.75f * hexWidth + horizontalGap);
+        }
+        return new Point(xOffset, yOffset);
     }
 }
