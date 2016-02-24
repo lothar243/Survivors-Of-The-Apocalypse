@@ -16,15 +16,19 @@ public class Background {
     private float x, y;
     public float dx = 0, dy = 0;
 
-    final int verticalGap = 10, horizontalGap = 10;
+    final int verticalGap = 8, horizontalGap = 10;
 
     int hexWidth, hexHeight;
-
+    int horizontalHexOffset, verticalHexOffset;
+    int oddRowOffset;
 
     public Background(Bitmap res) {
         image = res;
         hexWidth = image.getWidth();
         hexHeight = image.getHeight();
+        horizontalHexOffset = (int)(1.5f * hexWidth + 2 * horizontalGap);
+        verticalHexOffset = (int)(.5f * hexHeight + verticalGap);
+        oddRowOffset = (int)(.75f * hexWidth + horizontalGap);
     }
 
     public void update() {
@@ -62,10 +66,10 @@ public class Background {
     }
 
     public Point gridOffset(int rowNum, int colNum) {
-        int xOffset = (int) (colNum * (1.5f * hexWidth + 2 * horizontalGap));
-        int yOffset = (int)(.5f * rowNum * (hexHeight + verticalGap));
+        int xOffset = colNum * horizontalHexOffset;
+        int yOffset = rowNum * verticalHexOffset;
         if(rowNum % 2 == 1) {
-            xOffset -= (int)(.75f * hexWidth + horizontalGap);
+            xOffset -= oddRowOffset;
         }
         return new Point(xOffset, yOffset);
     }
