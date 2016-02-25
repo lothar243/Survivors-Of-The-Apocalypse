@@ -18,7 +18,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static float backgroundWidth;
     public static float backgroundHeight;
     private MainThread thread;
-    private Background background;
+    private HexLayout hexLayout;
     public static float screenWidth;
     public static float screenHeight;
 
@@ -40,9 +40,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        background = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.hex));
-        backgroundWidth = background.getImageWidth();
-        backgroundHeight = background.getImageHeight();
+        hexLayout = new HexLayout(getResources());
+        backgroundWidth = hexLayout.getImageWidth();
+        backgroundHeight = hexLayout.getImageHeight();
         screenWidth = getWidth();
         screenHeight = getHeight();
 
@@ -81,15 +81,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 Log.d(NAME, touchX + ", " + touchY);
                 return true;
             case MotionEvent.ACTION_MOVE:
-                background.dx += event.getX() - touchX;
-                background.dy += event.getY() - touchY;
+                hexLayout.dx += event.getX() - touchX;
+                hexLayout.dy += event.getY() - touchY;
                 touchX = event.getX();
                 touchY = event.getY();
-//                Log.d(NAME, background.dx + " x " + background.dy);
+//                Log.d(NAME, hexLayout.dx + " x " + hexLayout.dy);
                 return true;
             case MotionEvent.ACTION_UP:
-                background.dx = 0;
-                background.dy = 0;
+                hexLayout.dx = 0;
+                hexLayout.dy = 0;
                 Log.d(NAME, touchX + ", " + touchY);
                 touchX = -1;
                 touchY = -1;
@@ -100,15 +100,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        background.update();
+        hexLayout.update();
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
+        canvas.save();
         final float scaleFactorX = getWidth()/ backgroundWidth;
         final float scaleFactorY = getHeight()/ backgroundHeight;
         super.draw(canvas);
-        background.draw(canvas);
+        hexLayout.draw(canvas);
     }
 }
 

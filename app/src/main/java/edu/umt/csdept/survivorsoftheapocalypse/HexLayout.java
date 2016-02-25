@@ -1,5 +1,6 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,12 +10,13 @@ import android.util.Log;
 /**
  * Handle drawing the background
  */
-public class Background {
-    public final String NAME = "Background";
+public class HexLayout {
+    public final String NAME = "HexLayout";
 
     private Bitmap image;
     private float x, y;
     public float dx = 0, dy = 0;
+    Hex[][] background;
 
     final int verticalGap = 8, horizontalGap = 10;
 
@@ -22,13 +24,15 @@ public class Background {
     int horizontalHexOffset, verticalHexOffset;
     int oddRowOffset;
 
-    public Background(Bitmap res) {
-        image = res;
-        hexWidth = image.getWidth();
-        hexHeight = image.getHeight();
-        horizontalHexOffset = (int)(1.5f * hexWidth + 2 * horizontalGap);
-        verticalHexOffset = (int)(.5f * hexHeight + verticalGap);
-        oddRowOffset = (int)(.75f * hexWidth + horizontalGap);
+
+    public HexLayout(Resources resources) {
+        background = new Hex[5][5];
+        for (int i = 0; i < 5; i++) {
+            background[i] = new Hex[5];
+            for (int j = 0; j < 5; j++) {
+                background[i][j] = new Hex(i, j, resources);
+            }
+        }
     }
 
     public void update() {
@@ -42,10 +46,9 @@ public class Background {
     public void draw(Canvas canvas) {
         if(canvas != null) {
             canvas.drawColor(Color.WHITE);
-            for(int col = 0; col < 10; col++) {
-                for (int row = 0; row < 10; row++) {
-                    Point offset = gridOffset(row, col);
-                    canvas.drawBitmap(image, x + offset.x, y + offset.y, null);
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    background[i][j].draw(canvas);
                 }
             }
         }
@@ -73,4 +76,6 @@ public class Background {
         }
         return new Point(xOffset, yOffset);
     }
+
+
 }
