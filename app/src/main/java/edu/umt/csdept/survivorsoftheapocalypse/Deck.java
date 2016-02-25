@@ -1,3 +1,5 @@
+package edu.umt.csdept.survivorsoftheapocalypse;
+
 import android.graphics.*;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class Deck {
     }
 
     public Bitmap getBitmap(){
-        return self.image;
+        return this.image;
     }
 }
 

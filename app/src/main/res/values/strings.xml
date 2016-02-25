@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Survivors Of The Apocalypse</string>
     <string name="title_activity_main">Survivors of the Apocalypse</string>
+    <string name="wood_resource">Wood: </string>
+    <string name="number_placeholder">##</string>
+    <string name="food_resource">Food: </string>
 </resources>

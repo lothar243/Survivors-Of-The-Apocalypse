@@ -1,3 +1,5 @@
+package edu.umt.csdept.survivorsoftheapocalypse;
+
 /**
  * Created by sinless on 2/11/16.
  */

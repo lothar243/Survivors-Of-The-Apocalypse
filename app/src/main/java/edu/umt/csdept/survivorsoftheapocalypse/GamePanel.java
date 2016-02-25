@@ -3,6 +3,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -14,11 +15,10 @@ import android.view.SurfaceView;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     final String NAME = "MainSurfaceView";
 
-    public static float backgoundWidth;
+    public static float backgroundWidth;
     public static float backgroundHeight;
-    public static final int MOVESPEED = -5;
     private MainThread thread;
-    private Background background;
+    private HexLayout hexLayout;
     public static float screenWidth;
     public static float screenHeight;
 
@@ -40,9 +40,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        background = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.hexgrid));
-        backgoundWidth = background.getImageWidth();
-        backgroundHeight = background.getImageHeight();
+        hexLayout = new HexLayout(getResources());
+        backgroundWidth = hexLayout.getImageWidth();
+        backgroundHeight = hexLayout.getImageHeight();
         screenWidth = getWidth();
         screenHeight = getHeight();
 
@@ -73,7 +73,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchX = event.getX();
@@ -81,15 +81,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 Log.d(NAME, touchX + ", " + touchY);
                 return true;
             case MotionEvent.ACTION_MOVE:
-                background.dx += event.getX() - touchX;
-                background.dy += event.getY() - touchY;
+                hexLayout.dx += event.getX() - touchX;
+                hexLayout.dy += event.getY() - touchY;
                 touchX = event.getX();
                 touchY = event.getY();
-//                Log.d(NAME, background.dx + " x " + background.dy);
+//                Log.d(NAME, hexLayout.dx + " x " + hexLayout.dy);
                 return true;
             case MotionEvent.ACTION_UP:
-                background.dx = 0;
-                background.dy = 0;
+                hexLayout.dx = 0;
+                hexLayout.dy = 0;
                 Log.d(NAME, touchX + ", " + touchY);
                 touchX = -1;
                 touchY = -1;
@@ -100,20 +100,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        background.update();
+        hexLayout.update();
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        final float scaleFactorX = getWidth()/ backgoundWidth;
+    public void draw(@NonNull Canvas canvas) {
+        canvas.save();
+        final float scaleFactorX = getWidth()/ backgroundWidth;
         final float scaleFactorY = getHeight()/ backgroundHeight;
         super.draw(canvas);
-        if(canvas != null) {
-//            final int savedState = canvas.save();
-//            canvas.scale(scaleFactorX, scaleFactorY);
-            background.draw(canvas);
-//            canvas.restoreToCount(savedState);
-        }
+        hexLayout.draw(canvas);
     }
 }
 
+//todo 3 layouts: board (scrollable and zoomable), player stats, player actions (scrollable)
