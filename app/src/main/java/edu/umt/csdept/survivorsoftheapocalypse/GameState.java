@@ -1,6 +1,7 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by sinless on 2/11/16.
@@ -12,19 +13,48 @@ class Location{
 
 public class GameState {
 
-
+    String[][] tileNames;
+    int[][] tileResources;
+    ArrayList<Location> player1Positions;
+    ArrayList<Location> player2Positions;
+    ArrayList<Location> wallLocations;
+    Deck tileDeck;
+    Deck playerDeck;
 
     public GameState(int boardX, int boardY) {
-        String[][] tileNames = new String[boardX][boardY];
-        int[][] tileResources = new int[boardX][boardY];
-        ArrayList<Location> player1Positions = new ArrayList<Location>();
-        ArrayList<Location> player2Positions = new ArrayList<Location>();
-        ArrayList<Location> wallLocations = new ArrayList<Location>();
-        Deck tileDeck = new Deck();
-        Deck playerDeck = new Deck();
+        HashMap<String, Tile>  tileMap = new HashMap<>();
+
+
+        tileNames = new String[boardX][boardY];
+
+        tileResources = new int[boardX][boardY];
+
+        player1Positions = new ArrayList<Location>();
+        player2Positions = new ArrayList<Location>();
+
+        wallLocations = new ArrayList<Location>();
+
+        tileDeck = new Deck();
+        playerDeck = new Deck();
 
 
     }
+    public void createtileMap(){
 
+    }
+
+    public void createTileDeck(){
+
+    }
+
+    public void createPlayerDeck(){
+
+    }
+
+    public Tile drawTile(){
+        Card tile =  tileDeck.draw();
+        tile.onAquire(this);
+        return (Tile)tile;
+    }
 
 }

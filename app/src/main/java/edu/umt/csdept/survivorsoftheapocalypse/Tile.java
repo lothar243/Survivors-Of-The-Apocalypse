@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
  * Created by sinless on 2/25/16.
  */
 public class Tile implements Card{
+    private String title;
     private Bitmap bitmap;
     private String resource;
     private int banditDanger;
@@ -56,5 +57,13 @@ public class Tile implements Card{
 
     public void setZombieDanger(int zombieDanger) {
         this.zombieDanger = zombieDanger;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
