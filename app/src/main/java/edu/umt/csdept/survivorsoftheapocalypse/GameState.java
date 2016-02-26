@@ -17,6 +17,10 @@ public class GameState {
         int[][] tileResources = new int[boardX][boardY];
         ArrayList<Location> player1Positions = new ArrayList<Location>;
         ArrayList<Location> player2Positions = new ArrayList<Location>;
-        ArrayList<Location> wallLocations = newArrayList<Location>
+        ArrayList<Location> wallLocations = newArrayList<Location>;
+        Deck tileDeck = new Deck()
+        Deck playerDeck = new Deck()
+
+
     }
 }
