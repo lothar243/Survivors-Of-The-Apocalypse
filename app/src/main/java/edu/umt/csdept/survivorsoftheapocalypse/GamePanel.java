@@ -1,12 +1,10 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -162,7 +160,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         float[] imageTouchPoints = {touchX, touchY};
         inverseMatrix.mapPoints(imageTouchPoints);
-        Hex.rectangularCoordsToHexCoords(imageTouchPoints[0], imageTouchPoints[1]);
+        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
         Log.d(NAME, "press at " + imageTouchPoints[0] + ", " + imageTouchPoints[1]);
     }
 
