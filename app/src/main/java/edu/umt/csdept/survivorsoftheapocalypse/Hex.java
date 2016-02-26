@@ -106,4 +106,11 @@ public class Hex {
         PointF center = getCenter();
         canvas.drawBitmap(image, center.x - sideLength,  center.y - sqrtThree * sideLength, null);
     }
+
+    public static Point rectangularCoordsToHexCoords(float x, float y) {
+        int r = (int)((2 * x) / (3 * sideLength) + .5);
+        int g = (int)(y / (sqrtThree * sideLength) - x / (3 * sideLength) + 1);
+        Log.d(NAME, "r = " + r + ", g = " + g);
+        return new Point(r, g);
+    }
 }

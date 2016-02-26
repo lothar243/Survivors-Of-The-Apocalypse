@@ -3,11 +3,15 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.Calendar;
 
 /**
  * The main surfaceview for the game
@@ -15,14 +19,22 @@ import android.view.SurfaceView;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     final String NAME = "MainSurfaceView";
 
-    public static float backgroundWidth;
-    public static float backgroundHeight;
     private MainThread thread;
     private HexLayout hexLayout;
     public static float screenWidth;
     public static float screenHeight;
 
-    public float touchX = -1, touchY = -1;
+    Matrix matrix = new Matrix();
+
+    float touchX = 0, touchY = 0;
+    float touchXSecond = 0, touchYSecond = 0;
+    float averageX = 0, averageY = 0;
+    int touchCount = 0;
+    boolean moving = false;
+    boolean hasLongPressed = false;
+    final float DISTANCE_BEFORE_MOVING = 50;
+    long timeOfInitialPress; // used for detecting a long press
+    final long TIME_BEFORE_LONG_PRESS = 500;
 
     public GamePanel(Context context) {
         super(context);
@@ -31,7 +43,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         // add the game loop
         getHolder().addCallback(this);
 
-        thread = new MainThread(getHolder(), this);
 
         // make gamePanel focusable so it can handle events
         setFocusable(true);
@@ -41,12 +52,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
 
         hexLayout = new HexLayout(getResources());
-        backgroundWidth = hexLayout.getImageWidth();
-        backgroundHeight = hexLayout.getImageHeight();
         screenWidth = getWidth();
         screenHeight = getHeight();
 
         // we can safely start the game loop
+        thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
     }
@@ -78,25 +88,82 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_DOWN:
                 touchX = event.getX();
                 touchY = event.getY();
-                Log.d(NAME, touchX + ", " + touchY);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                hexLayout.dx += event.getX() - touchX;
-                hexLayout.dy += event.getY() - touchY;
-                touchX = event.getX();
-                touchY = event.getY();
-//                Log.d(NAME, hexLayout.dx + " x " + hexLayout.dy);
+                moving = false;
+                hasLongPressed = false;
+                timeOfInitialPress = Calendar.getInstance().getTimeInMillis();
                 return true;
             case MotionEvent.ACTION_UP:
-                hexLayout.dx = 0;
-                hexLayout.dy = 0;
-                Log.d(NAME, touchX + ", " + touchY);
-                touchX = -1;
-                touchY = -1;
+                if(!moving)
+                    press(event);
+                return true;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                averageX = (event.getX(0) + event.getX(1)) / 2;
+                averageY = (event.getY(0) + event.getY(1)) / 2;
+                moving = true;
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if(!moving && (distanceFromInitialTouch(event) < DISTANCE_BEFORE_MOVING)) {
+                    return true;
+                }
+                moving = true;
+                if(event.getPointerCount() == 1) {
+                    // only one finger is touching the screen
+                    if(touchCount == 1) { // don't move when the user switches from 1-2 and vice versa
+                        matrix.postTranslate(event.getX() - touchX, event.getY() - touchY);
+                    }
+                    touchX = event.getX();
+                    touchY = event.getY();
+                    touchCount = event.getPointerCount();
+
+                    return true;
+                }
+                else {
+                    if(touchCount == 2) { // don't move when the user switches from 1-2 and vice versa
+                        // first, determine the location of the touches on the untranslated image
+                        Matrix inverseMatrix = new Matrix();
+                        if(!matrix.invert(inverseMatrix)) return true; // the matrix has no inverse somehow
+                        float[] imagePoints = new float[]{touchX, touchY, touchXSecond, touchYSecond};
+                        inverseMatrix.mapPoints(imagePoints); // the touch locations without any transformations
+
+                        float[] touchPoints = new float[]{
+                                event.getX(0), event.getY(0), event.getX(1), event.getY(1)};
+                        // now, create a matrix that sends those points to the current touch locations
+                        matrix.setPolyToPoly(imagePoints, 0, touchPoints, 0, 2);
+                    }
+                    touchX = event.getX(0);
+                    touchY = event.getY(0);
+                    touchXSecond = event.getX(1);
+                    touchYSecond = event.getY(1);
+                    touchCount = event.getPointerCount();
+
+                    return true;
+                }
+            case MotionEvent.ACTION_POINTER_UP:
+                if(event.getPointerCount() == 1) {
+                    touchX = event.getX();
+                    touchY = event.getY();
+                }
+
                 return true;
         }
+        return true;
+    }
 
-        return super.onTouchEvent(event);
+    public float distanceFromInitialTouch(MotionEvent event) {
+        float dx = touchX - event.getX();
+        float dy = touchY - event.getY();
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public void press(MotionEvent event) {
+        Matrix inverseMatrix = new Matrix();
+        if(!matrix.invert(inverseMatrix)) {
+            return;
+        }
+        float[] imageTouchPoints = {touchX, touchY};
+        inverseMatrix.mapPoints(imageTouchPoints);
+        Hex.rectangularCoordsToHexCoords(imageTouchPoints[0], imageTouchPoints[1]);
+        Log.d(NAME, "press at " + imageTouchPoints[0] + ", " + imageTouchPoints[1]);
     }
 
     public void update() {
@@ -105,9 +172,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
+        canvas.setMatrix(matrix);
         canvas.save();
-        final float scaleFactorX = getWidth()/ backgroundWidth;
-        final float scaleFactorY = getHeight()/ backgroundHeight;
         super.draw(canvas);
         hexLayout.draw(canvas);
     }
