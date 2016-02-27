@@ -60,4 +60,10 @@ public class GameState {
         return (Tile)tile;
     }
 
+    public PlayCard drawPlayCard(){
+        Card drawnCard = playerDeck.draw();
+        drawnCard.onAquire(this);
+        return (PlayCard) drawnCard;
+    }
+
 }
