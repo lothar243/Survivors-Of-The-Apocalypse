@@ -29,17 +29,20 @@ public class GameState {
 
         tileResources = new int[boardX][boardY];
 
-        player1Positions = new ArrayList<Location>();
-        player2Positions = new ArrayList<Location>();
+        player1Positions = new ArrayList<>();
+        player2Positions = new ArrayList<>();
 
-        wallLocations = new ArrayList<Location>();
+        wallLocations = new ArrayList<>();
 
         tileDeck = new Deck();
         playerDeck = new Deck();
 
+        createTileMap();
+        createTileDeck();
+        createPlayerDeck();
 
     }
-    public void createtileMap(){
+    public void createTileMap(){
 
     }
 
