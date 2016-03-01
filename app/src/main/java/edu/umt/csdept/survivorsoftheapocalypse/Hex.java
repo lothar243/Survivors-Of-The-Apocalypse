@@ -29,7 +29,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -74,11 +73,17 @@ public class Hex {
         image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.hex),
                 hexWidth - horizontalGap, hexHeight - verticalGap, false);
 
+
     }
     public Hex(int rCoord, int gCoord, Resources resources, int resourceID) {
         this.rCoord = rCoord;
         this.gCoord = gCoord;
         this.image = BitmapFactory.decodeResource(resources, resourceID);
+    }
+    public Hex(int rCoord, int gCoord, Bitmap image) {
+        this.rCoord = rCoord;
+        this.gCoord = gCoord;
+        this.image = image;
     }
 
     public void changeImage(Resources resources, int resourceID) {

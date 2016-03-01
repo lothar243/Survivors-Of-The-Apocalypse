@@ -13,14 +13,14 @@ public class MainThread extends Thread {
     private int FPS = 30;
     private double averageFPS;
     private final SurfaceHolder surfaceHolder;
-    private GamePanel gamePanel;
+    private GameBoardView gameBoardView;
     private  boolean running;
     public static Canvas canvas;
 
-    public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
+    public MainThread(SurfaceHolder surfaceHolder, GameBoardView gameBoardView) {
         super();
         this.surfaceHolder = surfaceHolder;
-        this.gamePanel = gamePanel;
+        this.gameBoardView = gameBoardView;
     }
 
     @Override
@@ -41,8 +41,8 @@ public class MainThread extends Thread {
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized ( surfaceHolder) {
-                    this.gamePanel.update();
-                    this.gamePanel.draw(canvas);
+                    this.gameBoardView.update();
+                    this.gameBoardView.draw(canvas);
                 }
             }
             catch (Exception e) {

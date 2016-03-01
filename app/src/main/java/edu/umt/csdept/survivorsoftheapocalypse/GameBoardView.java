@@ -14,13 +14,11 @@ import java.util.Calendar;
 /**
  * The main surfaceview for the game
  */
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
+public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback {
     final String NAME = "MainSurfaceView";
 
     private MainThread thread;
-    private HexLayout hexLayout;
-    public static float screenWidth;
-    public static float screenHeight;
+    private GameBoard gameBoard;
 
     Matrix matrix = new Matrix();
 
@@ -31,10 +29,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     boolean moving = false;
     boolean hasLongPressed = false;
     final float DISTANCE_BEFORE_MOVING = 50;
-    long timeOfInitialPress; // used for detecting a long press
+    long timeOfInitialPress; // used for detecting a long onPress
     final long TIME_BEFORE_LONG_PRESS = 500;
 
-    public GamePanel(Context context) {
+    public GameBoardView(Context context) {
         super(context);
 
 
@@ -49,9 +47,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        hexLayout = new HexLayout(getResources());
-        screenWidth = getWidth();
-        screenHeight = getHeight();
+        gameBoard = new GameBoard(getResources(), GameBoard.BoardShape.DIAMOND, 6);
 
         // we can safely start the game loop
         thread = new MainThread(getHolder(), this);
@@ -92,7 +88,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 return true;
             case MotionEvent.ACTION_UP:
                 if(!moving)
-                    press(event);
+                    onPress(event);
                 return true;
             case MotionEvent.ACTION_POINTER_DOWN:
                 averageX = (event.getX(0) + event.getX(1)) / 2;
@@ -153,7 +149,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
-    public void press(MotionEvent event) {
+    public void onPress(MotionEvent event) {
         Matrix inverseMatrix = new Matrix();
         if(!matrix.invert(inverseMatrix)) {
             return;
@@ -161,11 +157,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         float[] imageTouchPoints = {touchX, touchY};
         inverseMatrix.mapPoints(imageTouchPoints);
         Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
-        Log.d(NAME, "press at " + imageTouchPoints[0] + ", " + imageTouchPoints[1]);
+        Log.d(NAME, "onPress at " + imageTouchPoints[0] + ", " + imageTouchPoints[1]);
     }
 
     public void update() {
-        hexLayout.update();
+        gameBoard.update();
     }
 
     @Override
@@ -173,7 +169,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.setMatrix(matrix);
         canvas.save();
         super.draw(canvas);
-        hexLayout.draw(canvas);
+        gameBoard.draw(canvas);
     }
 }
 
