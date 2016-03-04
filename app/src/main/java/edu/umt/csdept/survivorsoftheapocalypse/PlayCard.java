@@ -3,7 +3,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 /**
  * Created by sinless on 2/25/16.
  */
-public class PlayCard implements Card {
+public abstract class PlayCard implements Card {
 
     @Override
     public void draw() {
@@ -11,12 +11,9 @@ public class PlayCard implements Card {
     }
 
     @Override
-    public void onAquire(GameState gameState) {
+    public abstract void onAquire(GameState gameState);
 
-    }
 
     @Override
-    public void onPlay(GameState gameState) {
-
-    }
+    public abstract void onPlay(GameState gameState);
 }
