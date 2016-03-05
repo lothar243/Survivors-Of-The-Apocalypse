@@ -4,6 +4,8 @@ import android.graphics.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by sinless on 2/10/16.
@@ -55,6 +57,10 @@ public class Deck {
             topX[i] = stack.remove(0);
         }
         return topX;
+    }
+
+    public void shuffle(){
+        Collections.shuffle(stack);
     }
 
     public int count(){
