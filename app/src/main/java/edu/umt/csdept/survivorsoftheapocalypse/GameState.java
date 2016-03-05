@@ -20,7 +20,7 @@ class Location{
 }
 
 public class GameState {
-
+    HashMap<String, Tile>  tileMap;
     String[][] tileNames;
     int[][] tileResources;
     ArrayList<Location> player1Positions;
@@ -29,8 +29,10 @@ public class GameState {
     Deck tileDeck;
     Deck playerDeck;
 
+//make player object
+
     public GameState(int boardX, int boardY) {
-        HashMap<String, Tile>  tileMap = new HashMap<>();
+       tileMap = new HashMap<>();
 
 
         tileNames = new String[boardX][boardY];
