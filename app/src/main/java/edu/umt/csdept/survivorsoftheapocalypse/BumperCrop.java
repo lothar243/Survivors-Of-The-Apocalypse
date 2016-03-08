@@ -16,6 +16,6 @@ public class BumperCrop extends PlayCard {
 
     @Override
     public void onPlay(GameState gameState) {
-        gameState.incrementResources("Feild");
+        gameState.incrementResources("Field");
     }
 }
