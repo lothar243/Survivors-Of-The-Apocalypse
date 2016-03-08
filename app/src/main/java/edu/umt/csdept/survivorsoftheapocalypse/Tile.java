@@ -12,10 +12,6 @@ public class Tile implements Card{
     private int banditDanger;
     private int zombieDanger;
 
-    @Override
-    public void draw() {
-
-    }
 
     @Override
     public void onAquire(GameState gameState) {

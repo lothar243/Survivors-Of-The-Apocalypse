@@ -15,8 +15,9 @@ public class PlayCardFactory {
 
     public PlayCard makeCard(String cardName){
         PlayCard playCard = null;
-        if (cardName.equalsIgnoreCase("Bumper Crop"))
+        if (cardName.equalsIgnoreCase("Bumper Crop")) {
             playCard = new BumperCrop();
+        }
         
         return playCard;
     }
