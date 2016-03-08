@@ -23,15 +23,14 @@ public class GameState {
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
     int[][] tileResources;
-    ArrayList<Location> player1Positions;
-    ArrayList<Location> player2Positions;
+    ArrayList<Player> players;
     ArrayList<Location> wallLocations;
     Deck tileDeck;
     Deck playerDeck;
 
 //make player object
 
-    public GameState(int boardX, int boardY) {
+    public GameState(int boardX, int boardY, int playerCount) {
        tileMap = new HashMap<>();
 
 
@@ -39,8 +38,9 @@ public class GameState {
 
         tileResources = new int[boardX][boardY];
 
-        player1Positions = new ArrayList<>();
-        player2Positions = new ArrayList<>();
+        for(int i=0; i< playerCount; i++){
+            players.add(new Player("Player "+i));
+        }
 
         wallLocations = new ArrayList<>();
 
