@@ -46,4 +46,11 @@ public class Player {
     public void setFoodCount(int foodCount) {
         this.foodCount = foodCount;
     }
+
+    public int[] playerResources(){
+        int[] resources = new int[2];
+        resources[0] = foodCount;
+        resources[1] = woodCount;
+        return  resources;
+    }
 }

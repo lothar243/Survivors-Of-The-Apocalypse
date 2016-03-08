@@ -106,4 +106,8 @@ public class GameState {
         }
         return  (Location[]) locations.toArray();
     }
+
+    public int[] getPlayerResources(int index){
+        return players.get(index).playerResources();
+    }
 }
