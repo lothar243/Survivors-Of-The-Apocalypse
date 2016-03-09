@@ -29,6 +29,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -103,7 +104,7 @@ public class Hex {
     public void draw(Canvas canvas) {
         if(image == null) return;
         PointF center = getCenter();
-        canvas.drawBitmap(image, center.x - .5f * hexWidth,  center.y - .5f * hexHeight, null);
+        canvas.drawBitmap(image, center.x - .5f * hexWidth, center.y - .5f * hexHeight, null);
     }
 
     public static PointF rectCoordsToHex(float x, float y) {
@@ -121,6 +122,41 @@ public class Hex {
         // as g increases, y decreases by a full hex height
         float y = - (.5f * r + g) * hexHeight;
         return new PointF(x, y);
+    }
+
+    public static Point getHexIndex(float x, float y) {
+
+        // determine the hex whose center is to the bottom left
+        PointF hexCoords = rectCoordsToHex(x, y);
+        int referenceR = (int)hexCoords.x;
+        int referenceG = (int)hexCoords.y;
+
+        // look through each hex (bottom left, bottom right, top right, top left) to see which one
+        // the clicked point is closest to
+        final int[] rDelta = {0, 1, 1, 0};
+        final int[] gDelta = {0, 0, 1, 1};
+
+        int currentClosest = 0;
+        float minDist = Float.MAX_VALUE;
+        for (int i = 0; i < 4; i++) {
+            PointF currentTestPoint = hexCoordsToRect(referenceR + rDelta[i], referenceG + gDelta[i]);
+            float currentDistance = distanceSquaredBetween(
+                    x, y,
+                    currentTestPoint.x, currentTestPoint.y
+
+            );
+            if(currentDistance < minDist) {
+                currentClosest = i;
+                minDist = currentDistance;
+            }
+        }
+        return new Point(referenceR + rDelta[currentClosest], referenceG + gDelta[currentClosest]);
+    }
+
+    private static float distanceSquaredBetween(float x1, float y1, float x2, float y2) {
+        float xDiff = x2 - x1;
+        float yDiff = y2 - y1;
+        return xDiff * xDiff + yDiff * yDiff;
     }
 
 }

@@ -3,6 +3,8 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -156,8 +158,9 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         }
         float[] imageTouchPoints = {touchX, touchY};
         inverseMatrix.mapPoints(imageTouchPoints);
-        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
-        Log.d(NAME, "onPress at " + imageTouchPoints[0] + ", " + imageTouchPoints[1]);
+        Point clickedIndex = Hex.getHexIndex(imageTouchPoints[0], imageTouchPoints[1]);
+//        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
+        Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
     }
 
     public void update() {
