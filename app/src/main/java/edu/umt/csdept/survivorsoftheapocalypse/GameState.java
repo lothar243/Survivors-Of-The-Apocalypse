@@ -110,4 +110,18 @@ public class GameState {
     public int[] getPlayerResources(int index){
         return players.get(index).playerResources();
     }
+
+    public Tile[][] getBoardLayout(){
+        Tile[][] layout = new Tile[tileNames.length][tileNames[0].length];
+        for (int i = 0 ;i< tileNames.length; i++){
+            for(int j=0; j< tileNames[0].length; j++){
+                if (tileNames[i][j] == null)
+                    layout[i][j] = null;
+                else{
+                    layout[i][j] = tileMap.get(tileNames[i][j]);
+                }
+            }
+        }
+        return layout;
+    }
 }
