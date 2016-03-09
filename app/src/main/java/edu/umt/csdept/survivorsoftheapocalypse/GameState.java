@@ -27,6 +27,7 @@ public class GameState {
     ArrayList<Location> wallLocations;
     Deck tileDeck;
     Deck playerDeck;
+    int currentPlayerIdx;
 
 //make player object
 
@@ -41,6 +42,8 @@ public class GameState {
         for(int i=0; i< playerCount; i++){
             players.add(new Player("Player "+i));
         }
+
+        currentPlayerIdx = 0;
 
         wallLocations = new ArrayList<>();
 
@@ -62,6 +65,22 @@ public class GameState {
 
     public void createPlayerDeck(){
 
+    }
+
+    public int endTurn(){
+        currentPlayerIdx++;
+        if (currentPlayerIdx >= players.size())
+            currentPlayerIdx=0;
+        return currentPlayerIdx;
+    }
+
+    public int[] getCurrentPlayerResources(){
+        return getPlayerResources(currentPlayerIdx);
+    }
+
+    public ArrayList<Location> getCurrentPlayerLocation(){
+        ArrayList<Location> locations = players.get(currentPlayerIdx).getLocations();
+        return locations;
     }
 
     public Tile drawTile(){
