@@ -4,4 +4,5 @@
     <string name="wood_resource">Wood: </string>
     <string name="number_placeholder">##</string>
     <string name="food_resource">Food: </string>
+    <string name="new_game">New Game</string>
 </resources>

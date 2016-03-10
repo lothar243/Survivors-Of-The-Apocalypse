@@ -20,7 +20,8 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     final String NAME = "MainSurfaceView";
 
     private MainThread thread;
-    private GameBoard gameBoard;
+    public GameBoard gameBoard;
+    private GameState gameState;
 
     Matrix matrix = new Matrix();
 
@@ -32,11 +33,11 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     boolean hasLongPressed = false;
     final float DISTANCE_BEFORE_MOVING = 50;
     long timeOfInitialPress; // used for detecting a long onPress
-    final long TIME_BEFORE_LONG_PRESS = 500;
 
-    public GameBoardView(Context context) {
+    public GameBoardView(Context context, GameState gameState) {
         super(context);
-
+        this.gameState = gameState;
+        gameBoard = new GameBoard(getResources(), this.gameState);
 
         // add the game loop
         getHolder().addCallback(this);
@@ -48,8 +49,6 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-        gameBoard = new GameBoard(getResources(), GameBoard.BoardShape.DIAMOND, 6);
 
         // we can safely start the game loop
         thread = new MainThread(getHolder(), this);
@@ -90,7 +89,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                 return true;
             case MotionEvent.ACTION_UP:
                 if(!moving)
-                    onPress(event);
+                    onPress();
                 return true;
             case MotionEvent.ACTION_POINTER_DOWN:
                 averageX = (event.getX(0) + event.getX(1)) / 2;
@@ -151,7 +150,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
-    public void onPress(MotionEvent event) {
+    public void onPress() {
         Matrix inverseMatrix = new Matrix();
         if(!matrix.invert(inverseMatrix)) {
             return;
@@ -175,5 +174,3 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         gameBoard.draw(canvas);
     }
 }
-
-//todo 3 layouts: board (scrollable and zoomable), player stats, player actions (scrollable)

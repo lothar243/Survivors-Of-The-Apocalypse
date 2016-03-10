@@ -46,13 +46,13 @@ public class Hex {
             x and y describe the center of each hex
             y = -sqrt(3) * s * (
 
-                      ________
-             ________/ 0,1    \________
-            / -1,1   \________/ 1,   0 \
-            \________/ 0,0    \________/
-            / -1,0   \________/ 1,  -1 \
-            \________/ 0,  -1 \________/
-                     \________/
+                    ______
+             ______/ 0,1  \______
+            / -1,1 \______/ 1, 0 \
+            \______/ 0,0  \______/
+            / -1,0 \______/ 1,-1 \
+            \______/ 0,-1 \______/
+                   \______/
     */
     private static final String NAME = "Hex";
 
@@ -84,7 +84,7 @@ public class Hex {
     public Hex(int rCoord, int gCoord, Bitmap image) {
         this.rCoord = rCoord;
         this.gCoord = gCoord;
-        this.image = image;
+        this.image = Bitmap.createScaledBitmap(image, hexWidth - horizontalGap, hexHeight - verticalGap, false);
     }
 
     public void changeImage(Resources resources, int resourceID) {

@@ -38,7 +38,7 @@ public class GameState {
         tileNames = new String[boardX][boardY];
 
         tileResources = new int[boardX][boardY];
-
+        players = new ArrayList<>();
         for(int i=0; i< playerCount; i++){
             players.add(new Player("Player "+i));
         }

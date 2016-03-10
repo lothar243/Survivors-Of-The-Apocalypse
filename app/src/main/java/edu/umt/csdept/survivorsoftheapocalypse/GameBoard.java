@@ -2,6 +2,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -33,6 +34,26 @@ public class GameBoard {
             case SQUARE:
                 break;
         }
+    }
+    public GameBoard(Resources resources, GameState gameState) {
+        Tile[][] boardLayout = gameState.getBoardLayout();
+        hexes = new ArrayList<>();
+        for (int i = 0; i < boardLayout.length; i++) {
+            ArrayList<Hex> hexRow = new ArrayList<>();
+            for (int j = 0; j < boardLayout[i].length; j++) {
+                Tile tile = boardLayout[i][j];
+                if(tile == null) {
+                    tile = new Tile();
+                }
+                Bitmap tileBitmap = tile.getBitmap();
+                if(tileBitmap == null) {
+                    tileBitmap = BitmapFactory.decodeResource(resources, R.drawable.hex);
+                }
+                hexRow.add(new Hex(i,j,tileBitmap));
+            }
+            hexes.add(hexRow);
+        }
+
     }
 
     public void update() {
