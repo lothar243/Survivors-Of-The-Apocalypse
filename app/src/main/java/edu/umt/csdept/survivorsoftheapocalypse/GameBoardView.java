@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -23,7 +24,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     public GameBoard gameBoard;
     private GameState gameState;
 
-    Matrix matrix = new Matrix();
+    Matrix canvasTransformationMatrix;
 
     float touchX = 0, touchY = 0;
     float touchXSecond = 0, touchYSecond = 0;
@@ -54,6 +55,13 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
+
+        //initializing the canvas transformation matrix so that the 0,0 hex is in the lower left, 4,4 is upper right
+        canvasTransformationMatrix = new Matrix();
+        PointF rectCoordsOfHex = Hex.hexCoordsToRect(4, 4);
+        float[] pointSources = {0, 0, rectCoordsOfHex.x, rectCoordsOfHex.y};
+        float[] pointDestinations = {0, getHeight(), getWidth(), 0};
+        canvasTransformationMatrix.setPolyToPoly(pointSources, 0, pointDestinations, 0, 2);
     }
 
     @Override
@@ -104,7 +112,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                 if(event.getPointerCount() == 1) {
                     // only one finger is touching the screen
                     if(touchCount == 1) { // don't move when the user switches from 1-2 and vice versa
-                        matrix.postTranslate(event.getX() - touchX, event.getY() - touchY);
+                        canvasTransformationMatrix.postTranslate(event.getX() - touchX, event.getY() - touchY);
                     }
                     touchX = event.getX();
                     touchY = event.getY();
@@ -116,14 +124,14 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     if(touchCount == 2) { // don't move when the user switches from 1-2 and vice versa
                         // first, determine the location of the touches on the untranslated image
                         Matrix inverseMatrix = new Matrix();
-                        if(!matrix.invert(inverseMatrix)) return true; // the matrix has no inverse somehow
+                        if(!canvasTransformationMatrix.invert(inverseMatrix)) return true; // the matrix has no inverse somehow
                         float[] imagePoints = new float[]{touchX, touchY, touchXSecond, touchYSecond};
                         inverseMatrix.mapPoints(imagePoints); // the touch locations without any transformations
 
                         float[] touchPoints = new float[]{
                                 event.getX(0), event.getY(0), event.getX(1), event.getY(1)};
                         // now, create a matrix that sends those points to the current touch locations
-                        matrix.setPolyToPoly(imagePoints, 0, touchPoints, 0, 2);
+                        canvasTransformationMatrix.setPolyToPoly(imagePoints, 0, touchPoints, 0, 2);
                     }
                     touchX = event.getX(0);
                     touchY = event.getY(0);
@@ -152,7 +160,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     public void onPress() {
         Matrix inverseMatrix = new Matrix();
-        if(!matrix.invert(inverseMatrix)) {
+        if(!canvasTransformationMatrix.invert(inverseMatrix)) {
             return;
         }
         float[] imageTouchPoints = {touchX, touchY};
@@ -168,7 +176,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        canvas.setMatrix(matrix);
+        canvas.setMatrix(canvasTransformationMatrix);
         canvas.save();
         super.draw(canvas);
         gameBoard.draw(canvas);
