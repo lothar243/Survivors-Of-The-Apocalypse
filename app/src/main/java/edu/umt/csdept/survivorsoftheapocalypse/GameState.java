@@ -1,7 +1,5 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
-import android.util.Range;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -68,9 +66,8 @@ public class GameState {
     }
 
     public int endTurn(){
-        currentPlayerIdx++;
-        if (currentPlayerIdx >= players.size())
-            currentPlayerIdx=0;
+       currentPlayerIdx =  ++currentPlayerIdx % players.size();
+
         return currentPlayerIdx;
     }
 
@@ -89,10 +86,10 @@ public class GameState {
         return (Tile)tile;
     }
 
-    public PlayCard drawPlayCard(){
+    public PlayerCard drawPlayCard(){
         Card drawnCard = playerDeck.draw();
         drawnCard.onAquire(this);
-        return (PlayCard) drawnCard;
+        return (PlayerCard) drawnCard;
     }
 
     public void incrementResources(String tileType) {

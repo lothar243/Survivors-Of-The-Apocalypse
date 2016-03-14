@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 /**
  * Created by sinless on 2/25/16.
  */
-public abstract class PlayCard implements Card {
+public abstract class PlayerCard implements Card {
 
     String CardName;
     Bitmap bitmap;

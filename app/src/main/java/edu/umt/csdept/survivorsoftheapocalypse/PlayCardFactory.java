@@ -13,12 +13,12 @@ public class PlayCardFactory {
     private PlayCardFactory() {
     }
 
-    public PlayCard makeCard(String cardName){
-        PlayCard playCard = null;
+    public PlayerCard makeCard(String cardName){
+        PlayerCard playerCard = null;
         if (cardName.equalsIgnoreCase("Bumper Crop")) {
-            playCard = new BumperCrop();
+            playerCard = new BumperCrop();
         }
         
-        return playCard;
+        return playerCard;
     }
 }

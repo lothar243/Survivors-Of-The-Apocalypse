@@ -3,7 +3,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 /**
  * Created by sinless on 3/4/16.
  */
-public class BumperCrop extends PlayCard {
+public class BumperCrop extends PlayerCard {
     public BumperCrop() {
         CardName = "BumperCrop";
     }
