@@ -18,7 +18,12 @@ public class PlayCardFactory {
         if (cardName.equalsIgnoreCase("Bumper Crop")) {
             playerCard = new BumperCrop();
         }
-        
+        else if (cardName.equalsIgnoreCase("New Growth")) {
+            playerCard = new NewGrowth();
+        }
+        else if (cardName.equalsIgnoreCase("Hidden Stores")) {
+            playerCard = new HiddenStores();
+        }
         return playerCard;
     }
 }

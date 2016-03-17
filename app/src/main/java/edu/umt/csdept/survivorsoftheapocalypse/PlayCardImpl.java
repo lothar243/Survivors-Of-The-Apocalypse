@@ -38,6 +38,11 @@ class NewGrowth extends PlayerCard{
 
 class HiddenStores extends PlayerCard{
 
+
+    public HiddenStores() {
+        CardName = "Hidden Stores";
+    }
+
     @Override
     public void onAquire(GameState gameState) {
         onPlay(gameState);

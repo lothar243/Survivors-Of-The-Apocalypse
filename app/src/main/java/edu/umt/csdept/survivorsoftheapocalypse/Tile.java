@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
  */
 public class Tile implements Card{
     private String title;
-    private Bitmap bitmap;
     private String resource;
     private int banditDanger;
     private int zombieDanger;
@@ -21,14 +20,6 @@ public class Tile implements Card{
     @Override
     public void onPlay(GameState gameState) {
     //do what needs to be done to add tile to board
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
     }
 
     public String getResource() {

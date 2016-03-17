@@ -8,13 +8,6 @@ import android.graphics.Bitmap;
 public abstract class PlayerCard implements Card {
 
     String CardName;
-    Bitmap bitmap;
-
-    @Override
-    public Bitmap getBitmap(){
-        return bitmap;
-    }
-
     @Override
     public abstract void onAquire(GameState gameState);
 
