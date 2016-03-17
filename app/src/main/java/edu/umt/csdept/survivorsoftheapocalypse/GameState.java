@@ -71,6 +71,10 @@ public class GameState {
         return currentPlayerIdx;
     }
 
+    public String getCurrentPlayerName(){
+        return players.get(currentPlayerIdx).getPlayerName();
+    }
+
     public int[] getCurrentPlayerResources(){
         return getPlayerResources(currentPlayerIdx);
     }
