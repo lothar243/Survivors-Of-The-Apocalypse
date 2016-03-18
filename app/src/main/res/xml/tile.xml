@@ -4,17 +4,30 @@
         ResourceType = "Food"
         ResourceCount = "5"
         ZombieThreat = "1"
-        RaiderThreat = "0"/>
+        RaiderThreat = "0"
+        TileDeckCount = "5"/>
     <Tile
         Name = "Forest"
         ResourceType = "Wood"
         ResourceCount = "5"
         ZombieThreat = "0"
-        RaiderThreat = "1"/>
+        RaiderThreat = "1"
+        TileDeckCount = "5"/>
+
     <Tile
         Name = "City"
         ResourceType = "Wild"
         ResourceCount = "3"
         ZombieThreat = "1"
-        RaiderThreat = "1"/>
+        RaiderThreat = "1"
+        TileDeckCount = "3"/>
+    <Tile
+        Name = "Mountain"
+        ResourceType = "None"
+        ResourceCount = "0"
+        ZombieThreat = "0"
+        RaiderThreat = "0"
+        TileDeckCount = "2"/>
+
+
 </Tiles>
