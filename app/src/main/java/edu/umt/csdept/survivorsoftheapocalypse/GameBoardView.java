@@ -182,9 +182,11 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        canvas.setMatrix(canvasTransformationMatrix);
-        canvas.save();
-        super.draw(canvas);
-        gameBoard.draw(canvas);
+        if(canvas != null) {
+            canvas.setMatrix(canvasTransformationMatrix);
+            canvas.save();
+            super.draw(canvas);
+            gameBoard.draw(canvas);
+        }
     }
 }
