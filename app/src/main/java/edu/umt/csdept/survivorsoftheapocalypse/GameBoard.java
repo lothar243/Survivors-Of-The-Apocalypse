@@ -45,10 +45,17 @@ public class GameBoard {
                 if(tile == null) {
                     tile = new Tile();
                 }
-                Bitmap tileBitmap = tile.getBitmap();
-                if(tileBitmap == null) {
-                    tileBitmap = BitmapFactory.decodeResource(resources, R.drawable.hex);
+                int imageResourceID;
+                if(tile.getTitle() == null) tile.setTitle("");
+                switch (tile.getTitle()) {
+                    case "Field":
+                        imageResourceID = R.drawable.field;
+                        break;
+                    default:
+                        imageResourceID = R.drawable.hex;
+                        break;
                 }
+                Bitmap tileBitmap = BitmapFactory.decodeResource(resources, imageResourceID);
                 hexRow.add(new Hex(i,j,tileBitmap));
             }
             hexes.add(hexRow);
