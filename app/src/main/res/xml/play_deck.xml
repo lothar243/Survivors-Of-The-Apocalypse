@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <deck xmlns:android="http://schemas.android.com/apk/res/android">
+    <card
+        name = "Bumper Crop"
+        Count = "5"
+        />
+    <card
+        name = "New Growth"
+        Count = "5"
+        />
 
 </deck>
