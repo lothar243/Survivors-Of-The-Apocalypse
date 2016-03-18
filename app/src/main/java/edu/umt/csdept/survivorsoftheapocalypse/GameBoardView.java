@@ -31,6 +31,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     public GameBoard gameBoard;
     private GameState gameState;
+    boolean renderedAtLeastOnce = false;
 
     Matrix canvasTransformationMatrix;
     float[] inititialTouchPosition;
@@ -60,6 +61,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
+        renderedAtLeastOnce = false;
 
         resetMapTranslations();
     }
@@ -76,6 +78,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        renderedAtLeastOnce = false;
     }
 
     @Override
@@ -145,6 +148,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     }
 //                    Log.d(NAME, "moving screen");
                 }
+                renderedAtLeastOnce = false;
                 // getting ready for the next iteration
                 lastTouchPositions = currentTouchPositions;
                 break;
@@ -187,6 +191,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
             canvas.save();
             super.draw(canvas);
             gameBoard.draw(canvas);
+            renderedAtLeastOnce = true;
         }
     }
 }

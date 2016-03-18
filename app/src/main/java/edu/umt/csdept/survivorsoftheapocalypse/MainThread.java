@@ -35,26 +35,25 @@ public class MainThread extends Thread {
 
         while(running) {
             startTime = System.nanoTime();
-            canvas = null;
+            if(!gameBoardView.renderedAtLeastOnce) {
+                canvas = null;
 
-            // try locking the canvas for pixel editing
-            try {
-                canvas = this.surfaceHolder.lockCanvas();
-                synchronized ( surfaceHolder) {
-                    this.gameBoardView.update();
-                    this.gameBoardView.draw(canvas);
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                if(canvas != null) {
-                    try {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
+                // try locking the canvas for pixel editing
+                try {
+                    canvas = this.surfaceHolder.lockCanvas();
+                    synchronized (surfaceHolder) {
+                        this.gameBoardView.update();
+                        this.gameBoardView.draw(canvas);
                     }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (canvas != null) {
+                        try {
+                            surfaceHolder.unlockCanvasAndPost(canvas);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
