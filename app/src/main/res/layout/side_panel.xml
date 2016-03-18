@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:padding="2dp"
     android:theme="@style/sidePanelTheme"
+    android:id="@+id/side_panel"
     android:background="@drawable/side_panel_border">
     <TextView
         android:layout_width="match_parent"
@@ -39,6 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/food_amount"
             android:text="@string/number_placeholder"/>
 
     </LinearLayout>

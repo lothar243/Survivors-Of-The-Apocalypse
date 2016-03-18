@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class InGameActivity extends Activity {
+    public static final String NAME = "InGameActivity";
 
     // these constants are used to identify extra arguments when starting the activity
     public static final String NUM_PLAYERS = "survivorsoftheapocalypse.NUM_PLAYERS";
@@ -17,6 +22,12 @@ public class InGameActivity extends Activity {
 
     GameBoardView gameBoardView;
     GameState gameState;
+
+    // various views
+    Button endTurnButton;
+    TextView woodCountView;
+    TextView foodCountView;
+    TextView playerNameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +68,35 @@ public class InGameActivity extends Activity {
         setContentView(mainPage);
         ViewGroup boardPanel = (ViewGroup) mainPage.findViewById(R.id.board_panel);
         boardPanel.addView(gameBoardView);
+
+        ViewGroup sidePanel = (ViewGroup)mainPage.findViewById(R.id.side_panel);
+        // setup views
+        foodCountView = (TextView)sidePanel.findViewById(R.id.food_amount);
+        woodCountView = (TextView)sidePanel.findViewById(R.id.wood_amount);
+        playerNameView = (TextView)sidePanel.findViewById(R.id.player_name);
+
+        endTurnButton = (Button)sidePanel.findViewById(R.id.end_turn_button);
+        endTurnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameState.endTurn();
+                refreshViews();
+            }
+        });
+        refreshViews();
+    }
+
+    public void refreshViews() {
+        playerNameView.setText(gameState.getCurrentPlayerName());
+        int [] currentPlayerResources = gameState.getCurrentPlayerResources();
+        if(currentPlayerResources != null) {
+            foodCountView.setText("" + currentPlayerResources[0]);
+            woodCountView.setText("" + currentPlayerResources[1]);
+        }
+        else {
+            foodCountView.setText("null");
+            woodCountView.setText("null");
+        }
     }
 
 
