@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -21,6 +22,15 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     final String NAME = "MainSurfaceView";
 
     private MainThread thread;
+
+    public GameBoardView(Context context) {
+        super(context);
+    }
+
+    public GameBoardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     public GameBoard gameBoard;
     private GameState gameState;
 
