@@ -1,6 +1,6 @@
 <Tiles>
     <Tile
-        Name = "Feilds"
+        Name = "Fields"
         ResourceType = "Food"
         ResourceCount = "5"
         ZombieThreat = "1"
