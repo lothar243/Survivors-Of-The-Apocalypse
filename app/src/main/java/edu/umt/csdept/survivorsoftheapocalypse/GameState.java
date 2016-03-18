@@ -47,7 +47,7 @@ public class GameState {
 
 //make player object
 
-    public GameState(int boardX, int boardY, int playerCount, ArrayList<Tile> tileList) {
+    public GameState(int boardX, int boardY, int playerCount, ArrayList<Tile> tileList, ArrayList<CardCount> cardCounts) {
        tileMap = new HashMap<>();
 
 

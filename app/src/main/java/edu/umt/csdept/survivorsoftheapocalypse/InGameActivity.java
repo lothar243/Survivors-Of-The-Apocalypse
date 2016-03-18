@@ -2,6 +2,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,8 +37,11 @@ public class InGameActivity extends Activity {
         catch (Exception e) {
             e.printStackTrace();
         }
+        Resources resources = getResources();
 
-        gameState = new GameState(boardWidth, boardHeight, numPlayers);
+        gameState = new GameState(boardWidth, boardHeight, numPlayers,
+                GameXMLReader.readTileCards(resources),
+                GameXMLReader.readCardCount(resources));
 
 
         // creating a gamestate for testing - temporary
