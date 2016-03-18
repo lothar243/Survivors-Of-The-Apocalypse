@@ -50,6 +50,16 @@ public class Tile implements Card{
         return title;
     }
 
+    @Override
+    public String toString() {
+        return "Tile{" +
+                "title='" + title + '\'' +
+                ", resource='" + resource + '\'' +
+                ", banditDanger=" + banditDanger +
+                ", zombieDanger=" + zombieDanger +
+                '}';
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
