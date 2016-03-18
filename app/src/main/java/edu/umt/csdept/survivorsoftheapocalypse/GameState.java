@@ -17,19 +17,37 @@ class Location{
     int ylocation;
 }
 
+class cardCount{
+    String name;
+    int count;
+
+    public cardCount(String name, int count) {
+        this.name = name;
+        this.count = count;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
 public class GameState {
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
     int[][] tileResources;
     ArrayList<Player> players;
     ArrayList<Location> wallLocations;
-    Deck tileDeck;
-    Deck playerDeck;
+    Deck<String> tileDeck;
+    Deck<Card> playerDeck;
     int currentPlayerIdx;
 
 //make player object
 
-    public GameState(int boardX, int boardY, int playerCount) {
+    public GameState(int boardX, int boardY, int playerCount, ArrayList<Tile> tileList) {
        tileMap = new HashMap<>();
 
 
@@ -45,15 +63,15 @@ public class GameState {
 
         wallLocations = new ArrayList<>();
 
-        tileDeck = new Deck();
-        playerDeck = new Deck();
+        tileDeck = new Deck<>();
+        playerDeck = new Deck<>();
 
-        createTileMap();
+        createTileMap(tileList);
         createTileDeck();
         createPlayerDeck();
 
     }
-    public void createTileMap(){
+    public void createTileMap(ArrayList<Tile> tileList){
 
     }
 
@@ -85,7 +103,8 @@ public class GameState {
     }
 
     public Tile drawTile(){
-        Card tile =  tileDeck.draw();
+        String tileName =  tileDeck.draw();
+        Tile tile  = tileMap.get(tileName);
         tile.onAquire(this);
         return (Tile)tile;
     }

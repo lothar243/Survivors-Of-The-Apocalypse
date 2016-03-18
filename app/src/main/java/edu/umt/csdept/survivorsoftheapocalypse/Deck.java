@@ -10,53 +10,53 @@ import java.util.Random;
 /**
  * Created by sinless on 2/10/16.
  */
-public class Deck {
-    private ArrayList<Card> stack;
+public class Deck<T> {
+    private ArrayList<T> stack;
     private Bitmap image;
 
     public Deck() {
-        this.stack = new ArrayList<Card>();
+        this.stack = new ArrayList<T>();
     }
 
-    public void add(Card newCard, String position){
+    public void add(T newT, String position){
         if (position.compareTo("top")==0){
-            stack.add(0,newCard);
+            stack.add(0,newT);
         }
         if (position.compareTo("bottom")==0){
-            stack.add(newCard);
+            stack.add(newT);
         }
     }
 
-    public void create(Collection<Card> deck){
+    public void create(Collection<T> deck){
         stack.addAll(deck);
     }
 
-    public Card[] peek(int x){
+    public T[] peek(int x){
         int  i=0;
         x = Math.min(x, count());
-        Card[] topX =new Card[x];
+        Object[] topX =new Object[x];
         while( i<x){
             topX[i] = stack.get(i);
         }
-        return topX;
+        return (T[])topX;
     }
 
-    public Card peek(){
+    public T peek(){
         return stack.get(0);
     }
 
-    public  Card draw(){
+    public  T draw(){
         return stack.remove(0);
     }
 
-    public Card[] draw(int x){
+    public T[] draw(int x){
         int  i=0;
          x = Math.min(x, count());
-        Card[] topX =new  Card[x];
+        Object[] topX =new  Object[x];
         while( i<x){
             topX[i] = stack.remove(0);
         }
-        return topX;
+        return (T[])topX;
     }
 
     public void shuffle(){
