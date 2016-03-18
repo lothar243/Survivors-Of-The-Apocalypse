@@ -12,4 +12,6 @@
     <string name="start_game">Start Game</string>
     <string name="board_default_width">5</string>
     <string name="board_default_height">5</string>
+    <string name="player_name">Player Name</string>
+    <string name="end_turn">End Turn</string>
 </resources>

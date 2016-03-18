@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="2dp"
+    android:theme="@style/sidePanelTheme"
     android:background="@drawable/side_panel_border">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/player_name"
+        android:id="@+id/player_name"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,12 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/wood_resource"
-            android:id="@+id/wood_label"
-            style="@style/sidePanelTheme"/>
+            android:id="@+id/wood_label"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/sidePanelTheme"
             android:text="@string/number_placeholder"
             android:id="@+id/wood_amount"/>
 
@@ -31,13 +35,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/food_resource"
-            style="@style/sidePanelTheme"
             android:id="@+id/food_label"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/sidePanelTheme"
             android:text="@string/number_placeholder"/>
 
     </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/end_turn_button"
+        android:text="@string/end_turn"/>
 </LinearLayout>
