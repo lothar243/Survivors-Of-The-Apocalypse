@@ -17,6 +17,24 @@ class Location{
     int ylocation;
 }
 
+class cardCount{
+    String name;
+    int count;
+
+    public cardCount(String name, int count) {
+        this.name = name;
+        this.count = count;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
 public class GameState {
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
