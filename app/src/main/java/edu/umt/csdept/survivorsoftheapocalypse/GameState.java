@@ -17,11 +17,11 @@ class Location{
     int ylocation;
 }
 
-class cardCount{
+class CardCount {
     String name;
     int count;
 
-    public cardCount(String name, int count) {
+    public CardCount(String name, int count) {
         this.name = name;
         this.count = count;
     }
