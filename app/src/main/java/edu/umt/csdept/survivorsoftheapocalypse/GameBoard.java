@@ -51,6 +51,12 @@ public class GameBoard {
                     case "Field":
                         imageResourceID = R.drawable.field;
                         break;
+                    case "Forest":
+                        imageResourceID = R.drawable.forest;
+                        break;
+                    case "City":
+                        imageResourceID = R.drawable.city;
+                        break;
                     default:
                         imageResourceID = R.drawable.hex;
                         break;
