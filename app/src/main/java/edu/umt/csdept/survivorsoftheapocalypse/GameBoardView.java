@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -35,14 +33,11 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     private GameState gameState;
 
     Matrix canvasTransformationMatrix;
-
-    float touchX = 0, touchY = 0;
-    float touchXSecond = 0, touchYSecond = 0;
-    float averageX = 0, averageY = 0;
-    int touchCount = 0;
+    float[] inititialTouchPosition;
+    float[] lastTouchPositions;
     boolean moving = false;
     boolean hasLongPressed = false;
-    final float DISTANCE_BEFORE_MOVING = 50;
+    final float DISTANCE_SQUARED_BEFORE_MOVING = 100;
     long timeOfInitialPress; // used for detecting a long onPress
 
     public GameBoardView(Context context, GameState gameState) {
@@ -66,12 +61,17 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         thread.setRunning(true);
         thread.start();
 
-        //initializing the canvas transformation matrix so that the 0,0 hex is in the lower left, 4,4 is upper right
+        resetMapTranslations();
+    }
+
+    //initializing the canvas transformation matrix so that the 0,0 hex is in the lower left, 4,4 is upper right
+    public void resetMapTranslations() {
         canvasTransformationMatrix = new Matrix();
         PointF rectCoordsOfHex = Hex.hexCoordsToRect(4, 4);
         float[] pointSources = {0, 0, rectCoordsOfHex.x, rectCoordsOfHex.y};
         float[] pointDestinations = {0, getHeight(), getWidth(), 0};
         canvasTransformationMatrix.setPolyToPoly(pointSources, 0, pointDestinations, 0, 2);
+
     }
 
     @Override
@@ -99,83 +99,79 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touchX = event.getX();
-                touchY = event.getY();
+//                Log.d(NAME, "ACTION_DOWN");
+                inititialTouchPosition = new float[2];
+                lastTouchPositions = new float[2];
+                inititialTouchPosition[0] = lastTouchPositions[0] = event.getX();
+                inititialTouchPosition[1] = lastTouchPositions[1] = event.getY();
                 moving = false;
                 hasLongPressed = false;
                 timeOfInitialPress = Calendar.getInstance().getTimeInMillis();
-                return true;
+                break;
             case MotionEvent.ACTION_UP:
+//                Log.d(NAME, "ACTION_UP");
                 if(!moving)
                     onPress();
-                return true;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                averageX = (event.getX(0) + event.getX(1)) / 2;
-                averageY = (event.getY(0) + event.getY(1)) / 2;
-                moving = true;
-                return true;
+                // forget the the previous touch
+                inititialTouchPosition = null;
+                lastTouchPositions = null;
+                break;
             case MotionEvent.ACTION_MOVE:
-                if(!moving && (distanceFromInitialTouch(event) < DISTANCE_BEFORE_MOVING)) {
-                    return true;
-                }
-                moving = true;
-                if(event.getPointerCount() == 1) {
-                    // only one finger is touching the screen
-                    if(touchCount == 1) { // don't move when the user switches from 1-2 and vice versa
-                        canvasTransformationMatrix.postTranslate(event.getX() - touchX, event.getY() - touchY);
-                    }
-                    touchX = event.getX();
-                    touchY = event.getY();
-                    touchCount = event.getPointerCount();
+                // allow zoom/translate/rotate, but not skew, so only paying attention to the first two touch points
+                int numTouchPoints = Math.min(2, event.getPointerCount());
 
-                    return true;
+                float[] currentTouchPositions = new float[numTouchPoints * 2];
+                for(int i = 0; i < currentTouchPositions.length / 2; i++) {
+                    currentTouchPositions[2 * i] = event.getX(i);
+                    currentTouchPositions[2 * i + 1] = event.getY(i);
+                }
+                if(currentTouchPositions.length != lastTouchPositions.length) {
+                    // a new touch point has been added or removed, so not moving the screen
+                    // do nothing
+//                    Log.d(NAME, "pointerCount changed");
                 }
                 else {
-                    if(touchCount == 2) { // don't move when the user switches from 1-2 and vice versa
-                        // first, determine the location of the touches on the untranslated image
-                        Matrix inverseMatrix = new Matrix();
-                        if(!canvasTransformationMatrix.invert(inverseMatrix)) return true; // the matrix has no inverse somehow
-                        float[] imagePoints = new float[]{touchX, touchY, touchXSecond, touchYSecond};
-                        inverseMatrix.mapPoints(imagePoints); // the touch locations without any transformations
-
-                        float[] touchPoints = new float[]{
-                                event.getX(0), event.getY(0), event.getX(1), event.getY(1)};
-                        // now, create a matrix that sends those points to the current touch locations
-                        canvasTransformationMatrix.setPolyToPoly(imagePoints, 0, touchPoints, 0, 2);
+                    Matrix transformationMatrix = new Matrix();
+                    transformationMatrix.setPolyToPoly(lastTouchPositions, 0, currentTouchPositions, 0, numTouchPoints);
+                    // alter the canvas so that the last touch points are now in the position of the new touch points
+                    canvasTransformationMatrix.postConcat(transformationMatrix);
+                    // if the screen isn't already classified as moving, determine if it should be
+                    if (!moving && (numTouchPoints > 1 ||
+                            distanceSquared(
+                                    currentTouchPositions[0], currentTouchPositions[1],
+                                    inititialTouchPosition[0], inititialTouchPosition[1]
+                            ) > DISTANCE_SQUARED_BEFORE_MOVING)) {
+                        moving = true;
                     }
-                    touchX = event.getX(0);
-                    touchY = event.getY(0);
-                    touchXSecond = event.getX(1);
-                    touchYSecond = event.getY(1);
-                    touchCount = event.getPointerCount();
-
-                    return true;
+//                    Log.d(NAME, "moving screen");
                 }
-            case MotionEvent.ACTION_POINTER_UP:
-                if(event.getPointerCount() == 1) {
-                    touchX = event.getX();
-                    touchY = event.getY();
-                }
-
-                return true;
+                // getting ready for the next iteration
+                lastTouchPositions = currentTouchPositions;
+                break;
         }
         return true;
     }
 
-    public float distanceFromInitialTouch(MotionEvent event) {
-        float dx = touchX - event.getX();
-        float dy = touchY - event.getY();
-        return (float) Math.sqrt(dx * dx + dy * dy);
+    public float distanceSquared(float x1, float y1, float x2, float y2) {
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        return dx * dx + dy * dy;
     }
 
     public void onPress() {
+        // determine the touchPoint location before the canvas translations
         Matrix inverseMatrix = new Matrix();
         if(!canvasTransformationMatrix.invert(inverseMatrix)) {
+            // something odd happened - the matrix should be invertible
+            resetMapTranslations();
             return;
         }
-        float[] imageTouchPoints = {touchX, touchY};
-        inverseMatrix.mapPoints(imageTouchPoints);
-        Point clickedIndex = Hex.getHexIndex(imageTouchPoints[0], imageTouchPoints[1]);
+        if(lastTouchPositions == null) {
+            Log.e(NAME, "onPress() happened with a null location");
+            return;
+        }
+        inverseMatrix.mapPoints(lastTouchPositions);
+        Point clickedIndex = Hex.getHexIndex(lastTouchPositions[0], lastTouchPositions[1]);
 //        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
         Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
     }
