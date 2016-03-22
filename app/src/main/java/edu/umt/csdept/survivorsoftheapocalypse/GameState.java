@@ -190,4 +190,16 @@ public class GameState {
         tileNames[xVal][yVal] = tile.getTitle();
         tileResources[xVal][yVal] = tile.getResourceCount();
     }
+
+    public void GatherResources( int playerIdx, Location location){
+        if( players.get(playerIdx).checkPresence(location)){
+            if (tileNames[location.xlocation][location.ylocation]!= null){
+                Tile tile = tileMap.get(tileNames[location.xlocation][location.ylocation]);
+                Player player = players.get(playerIdx);
+                player.gatherResource(tile.getResource(), 1);
+                tileResources[location.xlocation][location.ylocation] -=1;
+
+            }
+        }
+    }
 }

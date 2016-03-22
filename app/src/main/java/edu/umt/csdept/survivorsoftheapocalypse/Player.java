@@ -54,4 +54,28 @@ public class Player {
         return  resources;
     }
 
+    public boolean checkPresence(Location location) {
+        if (locations.contains(location))
+            return true;
+
+        return false;
+    }
+
+    public void gatherResource(String resource, int amount) {
+        if ("Wood".compareToIgnoreCase(resource)==0){
+            woodCount+=amount;
+        }
+        else if("Food".compareToIgnoreCase(resource)==0){
+            foodCount+=amount;
+        }
+    }
+
+    public void spendResources(String resource, int amount){
+        if ("Wood".compareToIgnoreCase(resource)==0){
+            woodCount-=amount;
+        }
+        else if("Food".compareToIgnoreCase(resource)==0){
+            foodCount-=amount;
+        }
+    }
 }
