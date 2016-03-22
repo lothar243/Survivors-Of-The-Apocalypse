@@ -86,4 +86,8 @@ public class Player {
     public void removePerson(Location location) {
         locations.remove(location);
     }
+
+    public int getUnitCount() {
+        return locations.size();
+    }
 }

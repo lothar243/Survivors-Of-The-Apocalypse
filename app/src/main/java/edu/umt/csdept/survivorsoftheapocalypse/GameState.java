@@ -210,4 +210,9 @@ public class GameState {
     public void removePerson(int playerIdx, Location location){
         players.get(playerIdx).removePerson(location);
     }
+
+    public int getSurvivorCount(int playerIdx){
+        return players.get(playerIdx).getUnitCount();
+
+    }
 }
