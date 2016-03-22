@@ -67,22 +67,37 @@ public class GameState {
         playerDeck = new Deck<>();
 
         createTileMap(tileList);
-        createTileDeck();
-        createPlayerDeck();
+        createTileDeck(tileList);
+        createPlayerDeck(cardCounts);
 
     }
     public void createTileMap(ArrayList<Tile> tileList){
-
+        for (Tile tile : tileList){
+            tileMap.put(tile.getTitle(), tile);
+        }
     }
 
-    public void createTileDeck(){
-
+    public void createTileDeck(ArrayList<Tile> tileList){
+        for (Tile tile : tileList){
+            String tileName = tile.getTitle();
+            for(int i = 0; i < tile.getDeckCount(); i++){
+                tileDeck.add(tileName, "bottom");
+            }
+        }
+        tileDeck.shuffle();
     }
 
-    public void createPlayerDeck(){
-
+    public void createPlayerDeck(ArrayList<CardCount> cardList){
+        PlayCardFactory cardFactory = PlayCardFactory.getInstance();
+        for (CardCount cardCount : cardList) {
+            String cardName = cardCount.getName();
+            for (int i = 0; i < cardCount.getCount(); i++) {
+                PlayerCard card = cardFactory.makeCard(cardName);
+                playerDeck.add(card, "bottom");
+            }
+            playerDeck.shuffle();
+        }
     }
-
     public int endTurn(){
        currentPlayerIdx =  ++currentPlayerIdx % players.size();
 
@@ -102,8 +117,13 @@ public class GameState {
         return locations;
     }
 
-    public Tile drawTile(){
+    public String drawTileName(){
         String tileName =  tileDeck.draw();
+        return tileName;
+    }
+
+    public Tile drawTile(){
+        String tileName =  drawTileName();
         Tile tile  = tileMap.get(tileName);
         tile.onAquire(this);
         return (Tile)tile;
@@ -115,10 +135,10 @@ public class GameState {
         return (PlayerCard) drawnCard;
     }
 
-    public void incrementResources(String tileType) {
+    public void incrementResources(String tileType, int amount) {
         Location[] tilesOfType = findAllTiles(tileType);
         for( Location location: tilesOfType){
-            tileResources[location.xlocation][location.ylocation] +=1;
+            tileResources[location.xlocation][location.ylocation] +=amount;
         }
 
     }
@@ -162,5 +182,12 @@ public class GameState {
             }
         }
         return layout;
+    }
+
+    public void PlaceTile(Tile tile, Location location){
+        int xVal = location.xlocation;
+        int yVal = location.ylocation;
+        tileNames[xVal][yVal] = tile.getTitle();
+        tileResources[xVal][yVal] = tile.getResourceCount();
     }
 }

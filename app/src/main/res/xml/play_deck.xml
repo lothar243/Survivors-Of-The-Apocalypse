@@ -8,5 +8,11 @@
         name = "New Growth"
         Count = "5"
         />
-
+    <card
+        name = "Hidden Stores"
+        Count = "5"
+        />
+    <card
+        name = "Locust Swarm"
+        Count = "3"/>
 </deck>

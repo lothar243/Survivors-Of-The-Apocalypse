@@ -24,6 +24,12 @@ public class PlayCardFactory {
         else if (cardName.equalsIgnoreCase("Hidden Stores")) {
             playerCard = new HiddenStores();
         }
+        else if (cardName.equalsIgnoreCase("Forest Fire")){
+            playerCard = new ForestFire();
+        }
+        else if(cardName.equalsIgnoreCase("Locust Swarm")){
+            playerCard = new LocustSwarm();
+        }
         return playerCard;
     }
 }

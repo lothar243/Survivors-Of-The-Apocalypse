@@ -10,16 +10,24 @@ public class Tile implements Card{
     private String resource;
     private int banditDanger;
     private int zombieDanger;
+    private int resourceCount;
+    private int deckCount;
 
 
     @Override
     public void onAquire(GameState gameState) {
-    onPlay(gameState);
+
+        onPlay(gameState);
     }
 
     @Override
     public void onPlay(GameState gameState) {
     //do what needs to be done to add tile to board
+
+    }
+
+    public void setTile(GameState gameState , Location location){
+        gameState.PlaceTile(this, location);
     }
 
     public String getResource() {
@@ -62,5 +70,21 @@ public class Tile implements Card{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getResourceCount() {
+        return resourceCount;
+    }
+
+    public void setResourceCount(int resourceCount) {
+        this.resourceCount = resourceCount;
+    }
+
+    public int getDeckCount() {
+        return deckCount;
+    }
+
+    public void setDeckCount(int deckCount) {
+        this.deckCount = deckCount;
     }
 }
