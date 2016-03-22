@@ -78,4 +78,8 @@ public class Player {
             foodCount-=amount;
         }
     }
+
+    public void placePerson(Location location) {
+        locations.add(location);
+    }
 }

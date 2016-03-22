@@ -202,4 +202,8 @@ public class GameState {
             }
         }
     }
+
+    public void placePerson(int playerIdx, Location location){
+        players.get(playerIdx).placePerson(location);
+    }
 }
