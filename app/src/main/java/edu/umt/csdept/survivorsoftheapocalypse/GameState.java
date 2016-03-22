@@ -206,4 +206,8 @@ public class GameState {
     public void placePerson(int playerIdx, Location location){
         players.get(playerIdx).placePerson(location);
     }
+
+    public void removePerson(int playerIdx, Location location){
+        players.get(playerIdx).removePerson(location);
+    }
 }

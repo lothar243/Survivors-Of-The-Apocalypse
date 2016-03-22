@@ -82,4 +82,8 @@ public class Player {
     public void placePerson(Location location) {
         locations.add(location);
     }
+
+    public void removePerson(Location location) {
+        locations.remove(location);
+    }
 }
