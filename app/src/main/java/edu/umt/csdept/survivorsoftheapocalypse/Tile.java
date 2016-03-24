@@ -65,6 +65,8 @@ public class Tile implements Card{
                 ", resource='" + resource + '\'' +
                 ", banditDanger=" + banditDanger +
                 ", zombieDanger=" + zombieDanger +
+                ", resourceCount=" + resourceCount +
+                ", deckCount=" + deckCount +
                 '}';
     }
 

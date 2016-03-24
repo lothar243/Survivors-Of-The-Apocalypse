@@ -79,7 +79,8 @@ public class Hex {
     public Hex(int rCoord, int gCoord, Resources resources, int resourceID) {
         this.rCoord = rCoord;
         this.gCoord = gCoord;
-        this.image = BitmapFactory.decodeResource(resources, resourceID);
+        this.image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, resourceID),
+                hexWidth - horizontalGap, hexHeight - verticalGap, false);
     }
     public Hex(int rCoord, int gCoord, Bitmap image) {
         this.rCoord = rCoord;
@@ -105,6 +106,9 @@ public class Hex {
         if(image == null) return;
         PointF center = getCenter();
         canvas.drawBitmap(image, center.x - .5f * hexWidth, center.y - .5f * hexHeight, null);
+    }
+    public Location getLocation() {
+        return new Location(rCoord, gCoord);
     }
 
     public static PointF rectCoordsToHex(float x, float y) {

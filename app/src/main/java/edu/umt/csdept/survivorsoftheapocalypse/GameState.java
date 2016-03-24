@@ -1,5 +1,7 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,7 +50,7 @@ public class GameState {
 //make player object
 
     public GameState(int boardX, int boardY, int playerCount, ArrayList<Tile> tileList, ArrayList<CardCount> cardCounts) {
-       tileMap = new HashMap<>();
+        tileMap = new HashMap<>();
 
 
         tileNames = new String[boardX][boardY];
@@ -165,7 +167,7 @@ public class GameState {
                 }
             }
         }
-        return  (Location[]) locations.toArray();
+        return   locations.toArray(new Location[locations.size()]);
     }
 
     public int[] getPlayerResources(int index){

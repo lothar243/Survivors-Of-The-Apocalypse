@@ -46,7 +46,12 @@ public class Deck<T> {
     }
 
     public  T draw(){
-        return stack.remove(0);
+        if(stack.size() > 0) {
+            T item = stack.get(0);
+            stack.remove(0);
+            return item;
+        }
+        else return null;
     }
 
     public T[] draw(int x){

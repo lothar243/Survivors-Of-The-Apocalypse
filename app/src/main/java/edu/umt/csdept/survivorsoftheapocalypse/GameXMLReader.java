@@ -57,8 +57,8 @@ public class GameXMLReader {
                         Tile currentTile = new Tile();
                         currentTile.setTitle(name);
                         currentTile.setResource(resourceType);
-                        // todo add resource count to tile
-                        // todo add tileDeckCount
+                        currentTile.setDeckCount(tileDeckCount);
+                        currentTile.setResourceCount(resourceCount);
                         currentTile.setZombieDanger(zombieThreat);
                         currentTile.setBanditDanger(raiderThreat);
                         tiles.add(currentTile);

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class InGameActivity extends Activity {
     public static final String NAME = "InGameActivity";
 
@@ -54,14 +56,25 @@ public class InGameActivity extends Activity {
                 GameXMLReader.readTileCards(resources),
                 GameXMLReader.readCardCount(resources));
 
+        Tile[][] boardLayout = gameState.getBoardLayout();
 
-        // creating a gamestate for testing - temporary
-        gameState.tileNames[1][1] = "Field";
+        // place all the tiles on the board
+//        Log.d(NAME, "tileLocations: " + tileLocations.length + " by " + tileLocations[0].xlocation);
+        for(int i = 0; i < boardLayout.length; i++) {
+            for(int j = 0; j < boardLayout[i].length; j++) {
+                Tile drawnTile = gameState.drawTile();
+                String tileTitle;
+                if (drawnTile == null) tileTitle = "null tile";
+                else tileTitle = drawnTile.getTitle();
+                if(drawnTile != null)
+                    gameState.PlaceTile(drawnTile, new Location(i, j));
+            }
+        }
 
         gameBoardView = new GameBoardView(this, gameState);
 
         // changing the bitmap of just the one tile, again this is only temporary
-        gameBoardView.gameBoard.hexes.get(1).get(1).changeImage(BitmapFactory.decodeResource(getResources(), R.drawable.field));
+//        gameBoardView.gameBoard.hexes.get(1).get(1).changeImage(BitmapFactory.decodeResource(getResources(), R.drawable.field));
 
         LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup mainPage = (ViewGroup) layoutInflater.inflate(R.layout.activity_main, null);

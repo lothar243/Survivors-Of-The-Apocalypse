@@ -61,9 +61,11 @@ public class MainThread extends Thread {
             waitTime = targetTime - timeMillis; // adjust waitTime
 
             try {
-                this.sleep(waitTime);
+                sleep(waitTime);
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                //
+            }
 
             totalTime += System.nanoTime() - startTime;
             frameCount++;
@@ -71,7 +73,7 @@ public class MainThread extends Thread {
                 averageFPS = 1000/((totalTime/frameCount)/1000000);
                 frameCount = 0;
                 totalTime = 0;
-                Log.d(NAME, "Average FPS: " + averageFPS);
+//                Log.d(NAME, "Average FPS: " + averageFPS);
             }
         }
     }

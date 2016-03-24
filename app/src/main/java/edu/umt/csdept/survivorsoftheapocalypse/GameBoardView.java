@@ -177,7 +177,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         inverseMatrix.mapPoints(lastTouchPositions);
         Point clickedIndex = Hex.getHexIndex(lastTouchPositions[0], lastTouchPositions[1]);
 //        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
-        Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
+//        Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
     }
 
     public void update() {
@@ -193,5 +193,9 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
             gameBoard.draw(canvas);
             renderedAtLeastOnce = true;
         }
+    }
+
+    public void invalidateGameBoard() {
+        gameBoard.invalidate();
     }
 }

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Tiles xmlns:android="http://schemas.android.com/apk/res/android">
     <Tile
-        Name = "Fields"
+        Name = "Field"
         ResourceType = "Food"
         ResourceCount = "5"
         ZombieThreat = "1"
         RaiderThreat = "0"
-        TileDeckCount = "5"/>
+        TileDeckCount = "20"/>
     <Tile
         Name = "Forest"
         ResourceType = "Wood"
         ResourceCount = "5"
         ZombieThreat = "0"
         RaiderThreat = "1"
-        TileDeckCount = "5"/>
+        TileDeckCount = "20"/>
     <Tile
         Name = "City"
         ResourceType = "Wild"
         ResourceCount = "3"
         ZombieThreat = "1"
         RaiderThreat = "1"
-        TileDeckCount = "3"/>
+        TileDeckCount = "12"/>
     <Tile
         Name = "Mountain"
         ResourceType = "None"
         ResourceCount = "0"
         ZombieThreat = "0"
         RaiderThreat = "0"
-        TileDeckCount = "2"/>
+        TileDeckCount = "8"/>
 </Tiles>
