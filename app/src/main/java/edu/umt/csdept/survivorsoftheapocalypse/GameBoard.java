@@ -81,6 +81,8 @@ public class GameBoard {
                 return R.drawable.forest;
             case "City":
                 return R.drawable.city;
+            case "Mountain":
+                return R.drawable.mountain;
             default:
                 return R.drawable.hex;
         }
