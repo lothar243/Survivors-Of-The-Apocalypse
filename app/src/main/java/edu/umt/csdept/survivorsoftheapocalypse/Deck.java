@@ -70,6 +70,8 @@ public class Deck<T> {
     public Bitmap getBitmap(){
         return this.image;
     }
+
+
 }
 
 

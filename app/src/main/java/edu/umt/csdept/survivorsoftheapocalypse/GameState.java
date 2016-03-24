@@ -118,6 +118,8 @@ public class GameState {
     }
 
     public String drawTileName(){
+        if (tileDeck.count()==0)
+            createTileDeck(new ArrayList<Tile>(tileMap.values()));
         String tileName =  tileDeck.draw();
         return tileName;
     }
