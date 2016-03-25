@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:theme="@style/sidePanelTheme"
     android:id="@+id/location_prompt"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    android:background="@drawable/side_panel_border">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:text="Select a location"/>
 
 </LinearLayout>

@@ -78,9 +78,9 @@ public class InGameActivity extends Activity {
         for(int i = 0; i < boardLayout.length; i++) {
             for(int j = 0; j < boardLayout[i].length; j++) {
                 Tile drawnTile = gameState.drawTile();
-                String tileTitle;
-                if (drawnTile == null) tileTitle = "null tile";
-                else tileTitle = drawnTile.getTitle();
+//                String tileTitle;
+//                if (drawnTile == null) tileTitle = "null tile";
+//                else tileTitle = drawnTile.getTitle();
                 if(drawnTile != null)
                     gameState.PlaceTile(drawnTile, new Location(i, j));
             }
@@ -139,10 +139,13 @@ public class InGameActivity extends Activity {
 
     public void onBoardPress(Point indices) {
         if(currentCard != null) {
-            currentCard.onPlay(gameState, new Location(indices));
-            sidePanel.setVisibility(View.VISIBLE);
-            locationPrompt.setVisibility(View.INVISIBLE);
-            currentCard = null;
+            String tileName = gameState.getTileNameAtLocation(new Location(indices));
+            if(!(tileName == null || tileName.equals(""))) {
+                currentCard.onPlay(gameState, new Location(indices));
+                sidePanel.setVisibility(View.VISIBLE);
+                locationPrompt.setVisibility(View.INVISIBLE);
+                currentCard = null;
+            }
         }
     }
 

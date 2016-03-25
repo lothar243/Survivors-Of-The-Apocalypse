@@ -238,4 +238,8 @@ public class GameState {
         return players.get(playerIdx).getUnitCount();
 
     }
+
+    public String getTileNameAtLocation(Location location) {
+        return tileNames[location.xlocation][location.ylocation];
+    }
 }
