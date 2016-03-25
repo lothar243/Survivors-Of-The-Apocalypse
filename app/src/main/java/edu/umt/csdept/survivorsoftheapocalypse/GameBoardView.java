@@ -20,13 +20,16 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     final String NAME = "MainSurfaceView";
 
     private MainThread thread;
+    InGameActivity activity;
 
     public GameBoardView(Context context) {
         super(context);
+        activity = (InGameActivity)context;
     }
 
     public GameBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        activity = (InGameActivity)context;
     }
 
     public GameBoard gameBoard;
@@ -174,6 +177,10 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         }
         inverseMatrix.mapPoints(lastTouchPositions);
         Point clickedIndex = Hex.getHexIndex(lastTouchPositions[0], lastTouchPositions[1]);
+        if(activity == null) {
+            activity = (InGameActivity)getContext();
+        }
+        activity.onBoardPress(clickedIndex);
 //        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
 //        Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
     }

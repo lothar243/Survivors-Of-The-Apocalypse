@@ -1,5 +1,6 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,10 +10,18 @@ import java.util.HashMap;
  * Created by sinless on 2/11/16.
  */
 class Location{
+    public Location(Point point) {
+        xlocation = point.x;
+        ylocation = point.y;
+    }
 
     public Location(int xlocation, int ylocation) {
         this.xlocation = xlocation;
         this.ylocation = ylocation;
+    }
+
+    public String toString() {
+        return "(" + xlocation + ", " + ylocation + ")";
     }
 
     int xlocation;
@@ -35,9 +44,14 @@ class CardCount {
     public int getCount() {
         return count;
     }
+
+    public String toString() {
+        return "name = " + name + ", count = " + count;
+    }
 }
 
 public class GameState {
+    InGameActivity activity;
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
     int[][] tileResources;
@@ -49,7 +63,8 @@ public class GameState {
 
 //make player object
 
-    public GameState(int boardX, int boardY, int playerCount, ArrayList<Tile> tileList, ArrayList<CardCount> cardCounts) {
+    public GameState(InGameActivity activity, int boardX, int boardY, int playerCount, ArrayList<Tile> tileList, ArrayList<CardCount> cardCounts) {
+        this.activity = activity;
         tileMap = new HashMap<>();
 
 
@@ -87,6 +102,10 @@ public class GameState {
             }
         }
         tileDeck.shuffle();
+    }
+
+    public void promptActivityForLocation(PlayerCard cardToBePlayed) {
+        activity.promptForLocation(cardToBePlayed);
     }
 
     public void createPlayerDeck(ArrayList<CardCount> cardList){

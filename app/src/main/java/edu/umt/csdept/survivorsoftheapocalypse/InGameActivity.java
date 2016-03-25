@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -25,11 +27,19 @@ public class InGameActivity extends Activity {
     GameBoardView gameBoardView;
     GameState gameState;
 
+    PlayerCard currentCard;
+
     // various views
+    ViewGroup sidePanel;
     Button endTurnButton;
     TextView woodCountView;
     TextView foodCountView;
     TextView playerNameView;
+
+    Button drawCardButton;
+
+    ViewGroup locationPrompt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +61,13 @@ public class InGameActivity extends Activity {
             e.printStackTrace();
         }
         Resources resources = getResources();
+        ArrayList<CardCount> testCounts = GameXMLReader.readCardCount(resources);
+        Log.d(NAME, "Reading cardCounts");
+        for (int i = 0; i < testCounts.size(); i++) {
+            Log.d(NAME, testCounts.get(i).toString());
+        }
 
-        gameState = new GameState(boardWidth, boardHeight, numPlayers,
+        gameState = new GameState(this, boardWidth, boardHeight, numPlayers,
                 GameXMLReader.readTileCards(resources),
                 GameXMLReader.readCardCount(resources));
 
@@ -82,7 +97,7 @@ public class InGameActivity extends Activity {
         ViewGroup boardPanel = (ViewGroup) mainPage.findViewById(R.id.board_panel);
         boardPanel.addView(gameBoardView);
 
-        ViewGroup sidePanel = (ViewGroup)mainPage.findViewById(R.id.side_panel);
+        sidePanel = (ViewGroup)mainPage.findViewById(R.id.side_panel);
         // setup views
         foodCountView = (TextView)sidePanel.findViewById(R.id.food_amount);
         woodCountView = (TextView)sidePanel.findViewById(R.id.wood_amount);
@@ -96,6 +111,16 @@ public class InGameActivity extends Activity {
                 refreshViews();
             }
         });
+        drawCardButton = (Button)sidePanel.findViewById(R.id.draw_card_button);
+        drawCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawCard();
+            }
+        });
+
+
+        locationPrompt = (ViewGroup)mainPage.findViewById(R.id.location_prompt);
         refreshViews();
     }
 
@@ -112,7 +137,25 @@ public class InGameActivity extends Activity {
         }
     }
 
+    public void onBoardPress(Point indices) {
+        if(currentCard != null) {
+            currentCard.onPlay(gameState, new Location(indices));
+            sidePanel.setVisibility(View.VISIBLE);
+            locationPrompt.setVisibility(View.INVISIBLE);
+            currentCard = null;
+        }
+    }
 
+    public void promptForLocation(PlayerCard cardBeingPlayed) {
+        currentCard = cardBeingPlayed;
+        locationPrompt.setVisibility(View.VISIBLE);
+        sidePanel.setVisibility(View.INVISIBLE);
+    }
+
+    public void drawCard() {
+        PlayerCard drawnCard = gameState.drawPlayCard();
+        Toast.makeText(this, drawnCard.getCardName() + " drawn", Toast.LENGTH_SHORT).show();
+    }
 
 
 }

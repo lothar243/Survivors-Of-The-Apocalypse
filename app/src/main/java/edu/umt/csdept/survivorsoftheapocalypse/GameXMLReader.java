@@ -87,15 +87,15 @@ public class GameXMLReader {
             while(eventType != XmlResourceParser.END_DOCUMENT) {
                 try {
                     if (eventType == XmlResourceParser.START_TAG
-                            && parser.getName().equalsIgnoreCase("tile")) {
+                            && parser.getName().equalsIgnoreCase("card")) {
                         String name = DEFAULT_XML_STRING;
                         int count = DEFAULT_INT_UNSPECIFIED_ATTRIBUTE;
                         for (int i = 0; i < parser.getAttributeCount(); i++) {
                             switch (parser.getAttributeName(i)) {
-                                case "Name":
+                                case "name":
                                     name = parser.getAttributeValue(i);
                                     break;
-                                case "ResourceCount":
+                                case "Count":
                                     count = parser.getAttributeIntValue(i, DEFAULT_INT_READ_ERROR);
                                     break;
                                 default:
