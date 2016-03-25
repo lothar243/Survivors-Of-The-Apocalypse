@@ -175,7 +175,7 @@ public class GameState {
                 }
             }
         }
-        return  (Location[]) locations.toArray();
+        return  locations.toArray(new Location[locations.size()]);
     }
     public Location[] findAllTiles(){
         ArrayList<Location> locations = new ArrayList<>();

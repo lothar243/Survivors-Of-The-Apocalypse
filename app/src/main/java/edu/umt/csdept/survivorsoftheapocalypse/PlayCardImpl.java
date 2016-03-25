@@ -16,7 +16,7 @@ class BumperCrop extends PlayerCard {
 
     @Override
     public void onPlay(GameState gameState) {
-//        gameState.incrementResources("Field",1);
+        gameState.incrementResources("Field",1);
     }
 }
 
@@ -32,7 +32,7 @@ class NewGrowth extends PlayerCard{
 
     @Override
     public void onPlay(GameState gameState) {
-//        gameState.incrementResources("Forest",1);
+        gameState.incrementResources("Forest",1);
     }
 }
 
@@ -51,7 +51,7 @@ class HiddenStores extends PlayerCard{
     @Override
     public void onPlay(GameState gameState) {
         gameState.promptActivityForLocation(this);
-//        gameState.incrementResources("City",1);
+        gameState.incrementResources("City",1);
     }
 }
 
@@ -67,7 +67,7 @@ class LocustSwarm extends PlayerCard{
 
     @Override
     public void onPlay(GameState gameState) {
-//        gameState.incrementResources("Feild", -1);
+        gameState.incrementResources("Field", -1);
     }
 }
 
@@ -83,6 +83,6 @@ class ForestFire extends PlayerCard{
 
     @Override
     public void onPlay(GameState gameState) {
-//        gameState.incrementResources("Forest", -1);
+        gameState.incrementResources("Forest", -1);
     }
 }
