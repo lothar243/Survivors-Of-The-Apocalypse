@@ -50,8 +50,13 @@ class HiddenStores extends PlayerCard{
 
     @Override
     public void onPlay(GameState gameState) {
-        gameState.promptActivityForLocation(this);
-        gameState.incrementResources("City",1);
+        gameState.promptActivityForLocation(this); // use this to cause the activity to prompt the user
+        gameState.incrementResources("City", 1);
+    }
+
+    @Override
+    public void onPlay(GameState gameState, Location location) {
+        // custom behavior after the location has been selected
     }
 }
 
