@@ -30,11 +30,10 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public GameBoard gameBoard;
-    private GameState gameState;
     boolean renderedAtLeastOnce = false;
 
     Matrix canvasTransformationMatrix;
-    float[] inititialTouchPosition;
+    float[] initialTouchPosition;
     float[] lastTouchPositions;
     boolean moving = false;
     boolean hasLongPressed = false;
@@ -43,8 +42,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     public GameBoardView(Context context, GameState gameState) {
         super(context);
-        this.gameState = gameState;
-        gameBoard = new GameBoard(getResources(), this.gameState);
+        gameBoard = new GameBoard(getResources(), gameState);
 
         // add the game loop
         getHolder().addCallback(this);
@@ -103,10 +101,10 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 //                Log.d(NAME, "ACTION_DOWN");
-                inititialTouchPosition = new float[2];
+                initialTouchPosition = new float[2];
                 lastTouchPositions = new float[2];
-                inititialTouchPosition[0] = lastTouchPositions[0] = event.getX();
-                inititialTouchPosition[1] = lastTouchPositions[1] = event.getY();
+                initialTouchPosition[0] = lastTouchPositions[0] = event.getX();
+                initialTouchPosition[1] = lastTouchPositions[1] = event.getY();
                 moving = false;
                 hasLongPressed = false;
                 timeOfInitialPress = Calendar.getInstance().getTimeInMillis();
@@ -116,7 +114,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                 if(!moving)
                     onPress();
                 // forget the the previous touch
-                inititialTouchPosition = null;
+                initialTouchPosition = null;
                 lastTouchPositions = null;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -142,7 +140,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     if (!moving && (numTouchPoints > 1 ||
                             distanceSquared(
                                     currentTouchPositions[0], currentTouchPositions[1],
-                                    inititialTouchPosition[0], inititialTouchPosition[1]
+                                    initialTouchPosition[0], initialTouchPosition[1]
                             ) > DISTANCE_SQUARED_BEFORE_MOVING)) {
                         moving = true;
                     }
