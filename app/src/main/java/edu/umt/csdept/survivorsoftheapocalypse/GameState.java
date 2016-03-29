@@ -51,6 +51,7 @@ class CardCount {
 }
 
 public class GameState {
+    int TURNCOUNT = 4;
     InGameActivity activity;
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
@@ -60,6 +61,7 @@ public class GameState {
     Deck<String> tileDeck;
     Deck<Card> playerDeck;
     int currentPlayerIdx;
+    int currentPlayerTurnsTaken;
 
 //make player object
 
@@ -86,6 +88,7 @@ public class GameState {
         createTileMap(tileList);
         createTileDeck(tileList);
         createPlayerDeck(cardCounts);
+        currentPlayerTurnsTaken = 0;
 
     }
     public void createTileMap(ArrayList<Tile> tileList){
@@ -118,10 +121,11 @@ public class GameState {
             }
             playerDeck.shuffle();
         }
+        playerDeck.shuffle();
     }
     public int endTurn(){
        currentPlayerIdx =  ++currentPlayerIdx % players.size();
-
+        currentPlayerTurnsTaken = 0;
         return currentPlayerIdx;
     }
 
@@ -241,5 +245,12 @@ public class GameState {
 
     public String getTileNameAtLocation(Location location) {
         return tileNames[location.xlocation][location.ylocation];
+    }
+
+    public int getRemainingActions(){
+        return TURNCOUNT -currentPlayerTurnsTaken;
+    }
+    public int spendAction(){
+        return currentPlayerTurnsTaken +=1;
     }
 }
