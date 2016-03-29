@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="foodTextColor">#008B45</color>
-    <color name="woodTextColor">#8B4513</color>
+    <color name="foodTextColor">#00EE76</color>
+    <color name="woodTextColor">#CD661D</color>
     <color name="wildTextColor">#000000</color>
 </resources>

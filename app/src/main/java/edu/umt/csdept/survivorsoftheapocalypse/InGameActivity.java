@@ -3,7 +3,6 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +27,7 @@ public class InGameActivity extends Activity {
     GameState gameState;
 
     PlayerCard currentCard;
+    boolean buyingPerson = false;
 
     // various views
     ViewGroup sidePanel;
@@ -37,6 +37,7 @@ public class InGameActivity extends Activity {
     TextView playerNameView;
 
     Button drawCardButton;
+    Button buyPersonButton;
 
     ViewGroup locationPrompt;
 
@@ -74,22 +75,15 @@ public class InGameActivity extends Activity {
         Tile[][] boardLayout = gameState.getBoardLayout();
 
         // place all the tiles on the board
-//        Log.d(NAME, "tileLocations: " + tileLocations.length + " by " + tileLocations[0].xlocation);
         for(int i = 0; i < boardLayout.length; i++) {
             for(int j = 0; j < boardLayout[i].length; j++) {
                 Tile drawnTile = gameState.drawTile();
-//                String tileTitle;
-//                if (drawnTile == null) tileTitle = "null tile";
-//                else tileTitle = drawnTile.getTitle();
                 if(drawnTile != null)
                     gameState.PlaceTile(drawnTile, new Location(i, j));
             }
         }
 
         gameBoardView = new GameBoardView(this, gameState);
-
-        // changing the bitmap of just the one tile, again this is only temporary
-//        gameBoardView.gameBoard.hexes.get(1).get(1).changeImage(BitmapFactory.decodeResource(getResources(), R.drawable.field));
 
         LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup mainPage = (ViewGroup) layoutInflater.inflate(R.layout.activity_main, null);
@@ -119,6 +113,14 @@ public class InGameActivity extends Activity {
             }
         });
 
+        buyPersonButton = (Button)sidePanel.findViewById(R.id.buy_person);
+        buyPersonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyPerson();
+            }
+        });
+
 
         locationPrompt = (ViewGroup)mainPage.findViewById(R.id.location_prompt);
         refreshViews();
@@ -137,6 +139,12 @@ public class InGameActivity extends Activity {
         }
     }
 
+    public void buyPerson() {
+        sidePanel.setVisibility(View.INVISIBLE);
+        locationPrompt.setVisibility(View.VISIBLE);
+        buyingPerson = true;
+    }
+
     public void onBoardPress(Point indices) {
         if(currentCard != null) {
             String tileName = gameState.getTileNameAtLocation(new Location(indices));
@@ -146,6 +154,13 @@ public class InGameActivity extends Activity {
                 locationPrompt.setVisibility(View.INVISIBLE);
                 currentCard = null;
             }
+        }
+        else if(buyingPerson) {
+            gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
+            sidePanel.setVisibility(View.VISIBLE);
+            locationPrompt.setVisibility(View.INVISIBLE);
+            gameBoardView.invalidateGameBoard();
+            buyingPerson = false;
         }
     }
 
@@ -157,6 +172,7 @@ public class InGameActivity extends Activity {
 
     public void drawCard() {
         PlayerCard drawnCard = gameState.drawPlayCard();
+        gameBoardView.invalidateGameBoard();
         Toast.makeText(this, drawnCard.getCardName() + " drawn", Toast.LENGTH_SHORT).show();
     }
 
