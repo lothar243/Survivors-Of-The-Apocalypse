@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by sinless on 3/7/16.
  */
 public class Player {
-    ArrayList<Location> locations;
+    ArrayList<Location> locations = new ArrayList<>();
     int woodCount;
     int foodCount;
     private String playerName;

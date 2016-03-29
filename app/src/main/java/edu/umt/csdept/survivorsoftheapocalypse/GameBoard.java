@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -53,39 +54,44 @@ public class GameBoard {
             for (int j = 0; j < boardLayout[i].length; j++) {
                 ArrayList<Hex> currentRow = hexes.get(i);
                 Tile currentTile = boardLayout[i][j];
-                int resourceID;
-                if(currentTile == null) {
-                    resourceID = imageResourceID("");
-//                    Log.d(NAME, "null tile");
+                int imageResourceID, numResources = 0;
+                int resourceTypeColor;
+                String name = "";
+                if(currentTile != null) {
+                    name = currentTile.getTitle();
+                    numResources = currentTile.getResourceCount();
                 }
-                else {
-                    resourceID = imageResourceID(currentTile.getTitle());
-//                    Log.d(NAME, currentTile.toString());
+                switch (name) {
+                    case "Field":
+                        imageResourceID = R.drawable.field;
+                        resourceTypeColor = resources.getColor(R.color.foodTextColor);
+                        break;
+                    case "Forest":
+                        imageResourceID = R.drawable.forest;
+                        resourceTypeColor = resources.getColor(R.color.woodTextColor);
+                        break;
+                    case "City":
+                        imageResourceID = R.drawable.city;
+                        resourceTypeColor = resources.getColor(R.color.wildTextColor);
+                        break;
+                    case "Mountain":
+                        imageResourceID = R.drawable.mountain;
+                        resourceTypeColor = Color.TRANSPARENT;
+                        break;
+                    default:
+                        imageResourceID = R.drawable.hex;
+                        resourceTypeColor = Color.BLACK;
+                        break;
                 }
+
                 if(currentRow.size() <= j) currentRow.add(
-                        new Hex(i, j, resources, resourceID));
-                else currentRow.get(j).changeImage(resources, resourceID);
+                        new Hex(i, j, resources, imageResourceID, numResources, resourceTypeColor));
             }
         }
         upToDate = true;
     }
 
     public void update() {
-    }
-
-    public int imageResourceID(String name) {
-        switch (name) {
-            case "Field":
-                return R.drawable.field;
-            case "Forest":
-                return R.drawable.forest;
-            case "City":
-                return R.drawable.city;
-            case "Mountain":
-                return R.drawable.mountain;
-            default:
-                return R.drawable.hex;
-        }
     }
 
     public void draw(Canvas canvas) {
