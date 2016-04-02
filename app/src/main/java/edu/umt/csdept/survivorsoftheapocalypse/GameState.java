@@ -10,9 +10,34 @@ import java.util.HashMap;
  * Created by sinless on 2/11/16.
  */
 class Location{
+
+    int xlocation;
+    int ylocation;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        if (xlocation != location.xlocation) return false;
+        return ylocation == location.ylocation;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = xlocation;
+        result = 31 * result + ylocation;
+        return result;
+    }
+
     public Location(Point point) {
         xlocation = point.x;
         ylocation = point.y;
+
     }
 
     public Location(int xlocation, int ylocation) {
@@ -24,8 +49,6 @@ class Location{
         return "(" + xlocation + ", " + ylocation + ")";
     }
 
-    int xlocation;
-    int ylocation;
 }
 
 class CardCount {
@@ -252,5 +275,24 @@ public class GameState {
     }
     public int spendAction(){
         return currentPlayerTurnsTaken +=1;
+    }
+
+    public boolean collectResources(){
+        Location resourceLocation = null;
+        promptActivityForLocation(null);
+        if (checkPresence(currentPlayerIdx,resourceLocation)) {
+            GatherResources(currentPlayerIdx, resourceLocation);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private boolean checkPresence(int playerIdx, Location queryLocation) {
+        ArrayList<Location> locations = getCurrentPlayerLocation();
+        if (locations.contains(queryLocation)){
+            return true;
+        }
+        return false;
     }
 }
