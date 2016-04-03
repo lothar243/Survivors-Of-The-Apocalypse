@@ -278,14 +278,22 @@ public class GameState {
     }
 
     public boolean collectResources(){
+        boolean validLocation = false;
         Location resourceLocation = null;
-        promptActivityForLocation(null);
-        if (checkPresence(currentPlayerIdx,resourceLocation)) {
-            GatherResources(currentPlayerIdx, resourceLocation);
-            return true;
-        }else{
-            return false;
+        while(!validLocation){
+            promptActivityForLocation(null);
+            boolean present =checkPresence(currentPlayerIdx,resourceLocation);
+
+            if (checkPresence(currentPlayerIdx,resourceLocation)) {
+
+                GatherResources(currentPlayerIdx, resourceLocation);
+
+                validLocation = true;
+
+                return true;
+            }
         }
+        return false;
     }
 
     private boolean checkPresence(int playerIdx, Location queryLocation) {
