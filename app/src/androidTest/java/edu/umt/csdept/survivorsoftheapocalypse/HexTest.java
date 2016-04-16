@@ -45,4 +45,18 @@ public class HexTest extends ApplicationTest {
             }
         }
     }
+
+    /**
+     * Additionally, in the app, the interface can be checked by zooming in very close. Clicking a
+     * hex outputs the coordinates of the hex in the console. The correct coordinates should be
+     * output right up to the border of the hex and immediately after crossing the edge, the
+     * coordinates should change
+     *
+     * The rotation of the screen should not effect which hex coordinates are output. Clicking a
+     * hex, rotating, clicking, rotating, etc. Each time the hex should show the same output
+     *
+     * Zooming should also not change the coordinates of a hex. To test this, first go to a moderate
+     * zoom level, click a hex, zoom in and click the same hex. Zooming out should still yield the
+     * same output.
+     */
 }
