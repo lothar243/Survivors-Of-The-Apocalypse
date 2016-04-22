@@ -73,7 +73,8 @@ class CardCount {
 }
 
 public class GameState {
-    int TURNCOUNT = 4;
+    private static final int WALLCOST = 2;
+    private static final int TURNCOUNT = 4;
     InGameActivity activity;
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
@@ -283,14 +284,12 @@ public class GameState {
 
     public boolean collectResources(Location resourceLocation){
         boolean validLocation = false;
-            boolean present =checkPresence(currentPlayerIdx,resourceLocation);
+            boolean present =checkPresence(currentPlayerIdx, resourceLocation);
 
-            if (checkPresence(currentPlayerIdx,resourceLocation)) {
+            if (present) {
                 if (getTileResources(resourceLocation)>=1){
-                    GatherResources(currentPlayerIdx, resourceLocation);
+                    validLocation = GatherResources(currentPlayerIdx, resourceLocation);
 
-
-                    validLocation = true;
                 }
 
             }
@@ -311,5 +310,47 @@ public class GameState {
 
     public int getTileResources(Location location){
         return tileResources[location.xlocation][location.ylocation];
+    }
+
+    public boolean addPerson(Location location){
+
+        boolean validAction = false;
+
+        if(!checkPresence(currentPlayerIdx, location)){
+            addPerson(location);
+            validAction = true;
+        }
+
+        return validAction;
+    }
+
+    public  boolean movePerson(int playerIdx, Location startLocation, Location endLocation){
+        boolean finished = false;
+         Player currentPlayer = players.get(playerIdx);
+        if( currentPlayer.checkPresence(startLocation)) {
+            if (tileNames[startLocation.xlocation][startLocation.ylocation] != null) {
+                removePerson(currentPlayerIdx,startLocation);
+                addPerson(endLocation);
+            }
+        }
+        return finished;
+    }
+
+    public boolean buildWall(Location location){
+        boolean validAction = false;
+
+        if(checkPresence(currentPlayerIdx, location)){
+            if (players.get(currentPlayerIdx).woodCount >=2) {
+                addWall(location);
+                players.get(currentPlayerIdx).woodCount -= WALLCOST;
+                validAction = true;
+            }
+        }
+
+        return validAction;
+    }
+
+    public void addWall(Location location) {
+        wallLocations.add(location);
     }
 }
