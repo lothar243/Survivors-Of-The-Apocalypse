@@ -282,15 +282,20 @@ public class GameState {
     }
 
     public boolean collectResources(Location resourceLocation){
-        promptActivityForLocation(null);
-        if (checkPresence(currentPlayerIdx,resourceLocation)) {
-            GatherResources(currentPlayerIdx, resourceLocation);
-            return true;
-        }else{
-            return false;
-        }
-    }
+        boolean validLocation = false;
+            boolean present =checkPresence(currentPlayerIdx,resourceLocation);
 
+            if (checkPresence(currentPlayerIdx,resourceLocation)) {
+                if (getTileResources(resourceLocation)>=1){
+                    GatherResources(currentPlayerIdx, resourceLocation);
+
+
+                    validLocation = true;
+                }
+
+            }
+        return validLocation;
+    }
 
     private boolean checkPresence(int playerIdx, Location queryLocation) {
         ArrayList<Location> locations = getCurrentPlayerLocation();
@@ -298,5 +303,13 @@ public class GameState {
             return true;
         }
         return false;
+    }
+
+    public int[][] getTileResources() {
+        return tileResources;
+    }
+
+    public int getTileResources(Location location){
+        return tileResources[location.xlocation][location.ylocation];
     }
 }
