@@ -36,6 +36,8 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class Hex {
     /*
             I'm using a hex coordinate idea taken from the following url:
@@ -72,13 +74,16 @@ public class Hex {
     static Resources resources;
 
     int rCoord, gCoord;
+    Location location;
     private Bitmap image;
     private Bitmap meepleBitmap = null;
+    ArrayList<Integer> playersPresent;
 
     int numResources;
     int resourceTypeColor;
 
-    public Hex(int rCoord, int gCoord, Resources _resources, int resourceID, int numResources, int resourceTypeColor) {
+    public Hex(int rCoord, int gCoord, Resources _resources, int resourceID, int numResources,
+               int resourceTypeColor) {
         this.rCoord = rCoord;
         this.gCoord = gCoord;
         Bitmap hex = BitmapFactory.decodeResource(_resources, R.drawable.hex);
@@ -103,8 +108,8 @@ public class Hex {
 
         this.numResources = numResources;
         this.resourceTypeColor = resourceTypeColor;
-
-        setMeeple(rCoord);
+        location = new Location(rCoord, gCoord);
+        playersPresent = new ArrayList<>();
     }
 
     public PointF getCenter() {
@@ -123,7 +128,7 @@ public class Hex {
         if(meepleBitmap != null) canvas.drawBitmap(meepleBitmap, offsetX + meepleX, offsetY + meepleY, null);
     }
     public Location getLocation() {
-        return new Location(rCoord, gCoord);
+        return location;
     }
 
     public void setMeeple(int playerNumber) {

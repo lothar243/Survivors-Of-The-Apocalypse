@@ -22,27 +22,9 @@ public class GameBoard {
     GameState gameState;
 
     public GameBoard(Resources resources, GameState gameState) {
-//        Tile[][] boardLayout = gameState.getBoardLayout();
         this.resources = resources;
         this.gameState = gameState;
         refreshHexes();
-//        hexes = new ArrayList<>();
-//        for (int i = 0; i < boardLayout.length; i++) {
-//            ArrayList<Hex> hexRow = new ArrayList<>();
-//            for (int j = 0; j < boardLayout[i].length; j++) {
-//                Tile tile = boardLayout[i][j];
-//                if(tile == null) {
-//                    tile = new Tile();
-//                }
-//                int imageResourceID = imageResourceID(tile.getTitle());
-//                if(tile.getTitle() == null) tile.setTitle("");
-//
-//                Bitmap tileBitmap = BitmapFactory.decodeResource(resources, imageResourceID);
-//                hexRow.add(new Hex(i,j,tileBitmap));
-//            }
-//            hexes.add(hexRow);
-//        }
-
     }
 
     private void refreshHexes() {
@@ -59,7 +41,7 @@ public class GameBoard {
                 String name = "";
                 if(currentTile != null) {
                     name = currentTile.getTitle();
-                    numResources = currentTile.getResourceCount();
+                    numResources = gameState.getTileResources(new Location(i, j));
                 }
                 switch (name) {
                     case "Field":
@@ -86,6 +68,14 @@ public class GameBoard {
 
                 if(currentRow.size() <= j) currentRow.add(
                         new Hex(i, j, resources, imageResourceID, numResources, resourceTypeColor));
+            }
+        }
+        // place meeples on hexes
+        for (int playerNum = 0; playerNum < gameState.players.size(); playerNum++) {
+            ArrayList<Location> playerLocations = gameState.getPlayerLocation(playerNum);
+            for(Location location: playerLocations) {
+                hexes.get(location.xlocation).get(location.ylocation).setMeeple(playerNum);
+                Log.d(NAME, "person at " + location);
             }
         }
         upToDate = true;

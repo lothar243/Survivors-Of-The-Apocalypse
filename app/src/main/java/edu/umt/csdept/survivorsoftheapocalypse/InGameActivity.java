@@ -26,8 +26,10 @@ public class InGameActivity extends Activity {
     GameBoardView gameBoardView;
     GameState gameState;
 
+    enum PossibleActions {decidingAction, buyingPerson, choosingCardLocation, harvesting}
+    PossibleActions currentPlayerAction;
+
     PlayerCard currentCard;
-    boolean buyingPerson = false;
 
     // various views
     ViewGroup sidePanel;
@@ -38,6 +40,7 @@ public class InGameActivity extends Activity {
 
     Button drawCardButton;
     Button buyPersonButton;
+    Button harvestButton;
 
     ViewGroup locationPrompt;
 
@@ -121,6 +124,14 @@ public class InGameActivity extends Activity {
             }
         });
 
+        harvestButton = (Button)sidePanel.findViewById(R.id.harvest);
+        harvestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                harvestResource();
+            }
+        });
+        currentPlayerAction = PossibleActions.decidingAction;
 
         locationPrompt = (ViewGroup)mainPage.findViewById(R.id.location_prompt);
         refreshViews();
@@ -142,29 +153,57 @@ public class InGameActivity extends Activity {
     public void buyPerson() {
         sidePanel.setVisibility(View.INVISIBLE);
         locationPrompt.setVisibility(View.VISIBLE);
-        buyingPerson = true;
+        currentPlayerAction = PossibleActions.buyingPerson;
+    }
+
+    public void harvestResource() {
+        sidePanel.setVisibility(View.INVISIBLE);
+        locationPrompt.setVisibility(View.VISIBLE);
+        currentPlayerAction = PossibleActions.harvesting;
     }
 
     public void onBoardPress(Point indices) {
-        if(currentCard != null) {
-            String tileName = gameState.getTileNameAtLocation(new Location(indices));
-            if(!(tileName == null || tileName.equals(""))) {
-                currentCard.onPlay(gameState, new Location(indices));
-                sidePanel.setVisibility(View.VISIBLE);
-                locationPrompt.setVisibility(View.INVISIBLE);
-                currentCard = null;
-            }
+        switch (currentPlayerAction) {
+            case choosingCardLocation:
+                String tileName = gameState.getTileNameAtLocation(new Location(indices));
+                if(!(tileName == null || tileName.equals(""))) {
+                    currentCard.onPlay(gameState, new Location(indices));
+                    sideBarPromptForLocation(false);
+                    currentCard = null;
+                }
+                break;
+            case buyingPerson:
+                Log.d(NAME, "Placing person at " + indices);
+                gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
+                sideBarPromptForLocation(false);
+                gameBoardView.invalidateGameBoard();
+                currentPlayerAction = PossibleActions.decidingAction;
+                break;
+            case harvesting:
+                Log.d(NAME, "Collecting resources from " + indices);
+                if(!gameState.collectResources(new Location(indices)))
+                    Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
+                sideBarPromptForLocation(false);
+                sidePanel.invalidate();
+                refreshViews();
+                currentPlayerAction = PossibleActions.decidingAction;
+                break;
+
         }
-        else if(buyingPerson) {
-            gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
+    }
+
+    private void sideBarPromptForLocation(boolean prompting) {
+        if(prompting) {
+
+        }
+        else {
             sidePanel.setVisibility(View.VISIBLE);
             locationPrompt.setVisibility(View.INVISIBLE);
-            gameBoardView.invalidateGameBoard();
-            buyingPerson = false;
         }
     }
 
     public void promptForLocation(PlayerCard cardBeingPlayed) {
+        currentPlayerAction = PossibleActions.choosingCardLocation;
         currentCard = cardBeingPlayed;
         locationPrompt.setVisibility(View.VISIBLE);
         sidePanel.setVisibility(View.INVISIBLE);

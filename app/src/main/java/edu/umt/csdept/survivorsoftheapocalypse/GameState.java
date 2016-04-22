@@ -163,6 +163,10 @@ public class GameState {
         ArrayList<Location> locations = players.get(currentPlayerIdx).getLocations();
         return locations;
     }
+    public ArrayList<Location> getPlayerLocation(int playerIdx) {
+        ArrayList<Location> locations = players.get(playerIdx).getLocations();
+        return locations;
+    }
 
     public String drawTileName(){
         if (tileDeck.count()==0)
@@ -277,8 +281,7 @@ public class GameState {
         return currentPlayerActionsTaken +=1;
     }
 
-    public boolean collectResources(){
-        Location resourceLocation = null;
+    public boolean collectResources(Location resourceLocation){
         promptActivityForLocation(null);
         if (checkPresence(currentPlayerIdx,resourceLocation)) {
             GatherResources(currentPlayerIdx, resourceLocation);
@@ -287,6 +290,7 @@ public class GameState {
             return false;
         }
     }
+
 
     private boolean checkPresence(int playerIdx, Location queryLocation) {
         ArrayList<Location> locations = getCurrentPlayerLocation();
