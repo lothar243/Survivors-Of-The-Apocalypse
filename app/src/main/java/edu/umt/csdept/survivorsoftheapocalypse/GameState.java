@@ -1,7 +1,6 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public class GameState {
     Deck<String> tileDeck;
     Deck<Card> playerDeck;
     int currentPlayerIdx;
-    int currentPlayerTurnsTaken;
+    int currentPlayerActionsTaken;
 
 //make player object
 
@@ -111,7 +110,7 @@ public class GameState {
         createTileMap(tileList);
         createTileDeck(tileList);
         createPlayerDeck(cardCounts);
-        currentPlayerTurnsTaken = 0;
+        currentPlayerActionsTaken = 0;
 
     }
     public void createTileMap(ArrayList<Tile> tileList){
@@ -148,7 +147,7 @@ public class GameState {
     }
     public int endTurn(){
        currentPlayerIdx =  ++currentPlayerIdx % players.size();
-        currentPlayerTurnsTaken = 0;
+        currentPlayerActionsTaken = 0;
         return currentPlayerIdx;
     }
 
@@ -241,16 +240,17 @@ public class GameState {
         tileResources[xVal][yVal] = tile.getResourceCount();
     }
 
-    public void GatherResources( int playerIdx, Location location){
+    public boolean GatherResources( int playerIdx, Location location){
         if( players.get(playerIdx).checkPresence(location)){
             if (tileNames[location.xlocation][location.ylocation]!= null){
                 Tile tile = tileMap.get(tileNames[location.xlocation][location.ylocation]);
                 Player player = players.get(playerIdx);
                 player.gatherResource(tile.getResource(), 1);
                 tileResources[location.xlocation][location.ylocation] -=1;
-
+                return true;
             }
         }
+        return false;
     }
 
     public void placePerson(int playerIdx, Location location){
@@ -271,10 +271,10 @@ public class GameState {
     }
 
     public int getRemainingActions(){
-        return TURNCOUNT -currentPlayerTurnsTaken;
+        return TURNCOUNT - currentPlayerActionsTaken;
     }
     public int spendAction(){
-        return currentPlayerTurnsTaken +=1;
+        return currentPlayerActionsTaken +=1;
     }
 
     public boolean collectResources(Location resourceLocation){
