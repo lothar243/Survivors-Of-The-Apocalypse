@@ -277,23 +277,20 @@ public class GameState {
         return currentPlayerTurnsTaken +=1;
     }
 
-    public boolean collectResources(){
+    public boolean collectResources(Location resourceLocation){
         boolean validLocation = false;
-        Location resourceLocation = null;
-        while(!validLocation){
-            promptActivityForLocation(null);
             boolean present =checkPresence(currentPlayerIdx,resourceLocation);
 
             if (checkPresence(currentPlayerIdx,resourceLocation)) {
+                if (getTileResources(resourceLocation)>=1){
+                    GatherResources(currentPlayerIdx, resourceLocation);
 
-                GatherResources(currentPlayerIdx, resourceLocation);
 
-                validLocation = true;
+                    validLocation = true;
+                }
 
-                return true;
             }
-        }
-        return false;
+        return validLocation;
     }
 
     private boolean checkPresence(int playerIdx, Location queryLocation) {
@@ -302,5 +299,13 @@ public class GameState {
             return true;
         }
         return false;
+    }
+
+    public int[][] getTileResources() {
+        return tileResources;
+    }
+
+    public int getTileResources(Location location){
+        return tileResources[location.xlocation][location.ylocation];
     }
 }
