@@ -1,6 +1,7 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +86,7 @@ public class GameState {
     Deck<Card> playerDeck;
     int currentPlayerIdx;
     int currentPlayerActionsTaken;
+    static final String NAME = "GameState";
 
 //make player object
 

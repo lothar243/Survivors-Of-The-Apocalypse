@@ -168,23 +168,24 @@ public class InGameActivity extends Activity {
                 String tileName = gameState.getTileNameAtLocation(new Location(indices));
                 if(!(tileName == null || tileName.equals(""))) {
                     currentCard.onPlay(gameState, new Location(indices));
-                    sideBarPromptForLocation(false);
+                    setSideBarPromptForLocation(false);
                     currentCard = null;
                 }
                 break;
             case buyingPerson:
                 Log.d(NAME, "Placing person at " + indices);
                 gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
-                sideBarPromptForLocation(false);
+                setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
+                refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
             case harvesting:
                 Log.d(NAME, "Collecting resources from " + indices);
                 if(!gameState.collectResources(new Location(indices)))
                     Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
-                sideBarPromptForLocation(false);
-                sidePanel.invalidate();
+                setSideBarPromptForLocation(false);
+                gameBoardView.invalidateGameBoard();
                 refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
@@ -192,7 +193,7 @@ public class InGameActivity extends Activity {
         }
     }
 
-    private void sideBarPromptForLocation(boolean prompting) {
+    private void setSideBarPromptForLocation(boolean prompting) {
         if(prompting) {
 
         }

@@ -213,4 +213,7 @@ public class Hex {
         return xDiff * xDiff + yDiff * yDiff;
     }
 
+    public void setResourceCount(int numResources) {
+        this.numResources = numResources;
+    }
 }
