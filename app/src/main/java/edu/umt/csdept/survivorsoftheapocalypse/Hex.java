@@ -29,7 +29,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -156,7 +155,7 @@ public class Hex {
                 meepleResourceID = R.drawable.meeple;
         }
         meepleBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, meepleResourceID),
-                maxImageWidth, maxMeepleHeight, false);
+                maxMeepleWidth, maxMeepleHeight, false);
         if(playerNumber == -1) {
             meepleBitmap = null;
         }

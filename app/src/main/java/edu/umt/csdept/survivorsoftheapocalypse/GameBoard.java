@@ -80,7 +80,7 @@ public class GameBoard {
     }
 
     public void update() {
-        refreshHexes();
+
     }
 
     public void draw(Canvas canvas) {

@@ -197,7 +197,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
     public void invalidateGameBoard() {
         gameBoard.invalidate();
         renderedAtLeastOnce = false;
-        this.invalidate();
-        this.update();
+        this.postInvalidate();
+        setWillNotDraw(false);
     }
 }

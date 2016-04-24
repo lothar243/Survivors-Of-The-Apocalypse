@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +40,8 @@ public class InGameActivity extends Activity {
     TextView playerNameView;
 
     Button drawCardButton;
-    Button buyPersonButton;
-    Button harvestButton;
+    ImageView buyPersonButton;
+    ImageView harvestButton;
 
     ViewGroup locationPrompt;
 
@@ -116,7 +117,7 @@ public class InGameActivity extends Activity {
             }
         });
 
-        buyPersonButton = (Button)sidePanel.findViewById(R.id.buy_person);
+        buyPersonButton = (ImageView)sidePanel.findViewById(R.id.buy_person);
         buyPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +125,7 @@ public class InGameActivity extends Activity {
             }
         });
 
-        harvestButton = (Button)sidePanel.findViewById(R.id.harvest);
+        harvestButton = (ImageView)sidePanel.findViewById(R.id.harvest);
         harvestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

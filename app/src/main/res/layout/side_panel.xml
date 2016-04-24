@@ -52,19 +52,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="New Person"
+        <ImageView
+            android:layout_width="@dimen/action_button_dimen"
+            android:layout_height="@dimen/action_button_dimen"
+            android:src="@drawable/add_meeple"
             android:id="@+id/buy_person"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Harvest Resource"
+        <ImageView
+            android:layout_width="@dimen/action_button_dimen"
+            android:layout_height="@dimen/action_button_dimen"
+            android:src="@drawable/add_wall"/>
+        <ImageView
+            android:layout_width="@dimen/action_button_dimen"
+            android:layout_height="@dimen/action_button_dimen"
+            android:src="@drawable/add_food"
             android:id="@+id/harvest"/>
+        <!--<Button-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="New Person"-->
+            <!--android:id="@+id/buy_person"/>-->
+        <!--<Button-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Harvest Resource"-->
+            <!--android:id="@+id/harvest"/>-->
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
