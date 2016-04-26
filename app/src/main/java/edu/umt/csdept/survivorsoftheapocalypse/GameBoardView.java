@@ -119,7 +119,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                 // forget the the previous touch
                 initialTouchPosition = null;
                 lastTouchPositions = null;
-                renderedAtLeastOnce = false;
+                invalidateGameBoard();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // allow zoom/translate/rotate, but not skew, so only paying attention to the first two touch points
@@ -145,7 +145,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     }
 //                    Log.d(NAME, "moving screen");
                 }
-                renderedAtLeastOnce = false;
+                invalidateGameBoard();
                 // getting ready for the next iteration
                 lastTouchPositions = currentTouchPositions;
                 break;

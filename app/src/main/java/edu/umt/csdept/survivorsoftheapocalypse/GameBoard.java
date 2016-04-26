@@ -26,7 +26,7 @@ public class GameBoard {
     }
 
     private void refreshHexes() {
-        Log.d(NAME, "refreshHexes()");
+//        Log.d(NAME, "refreshHexes()");
         Tile[][] boardLayout = gameState.getBoardLayout();
         if(hexes == null) hexes = new ArrayList<>();
         for (int i = 0; i < boardLayout.length; i++) {
@@ -73,14 +73,15 @@ public class GameBoard {
         for (int playerNum = 0; playerNum < gameState.players.size(); playerNum++) {
             ArrayList<Location> playerLocations = gameState.getPlayerLocation(playerNum);
             for(Location location: playerLocations) {
-                hexes.get(location.xlocation).get(location.ylocation).setMeeple(playerNum);
+                hexes.get(location.xlocation).get(location.ylocation).playerIsPresent(playerNum);
             }
         }
         upToDate = true;
     }
 
     public void update() {
-
+        if(!upToDate)
+            refreshHexes();
     }
 
     public void draw(Canvas canvas) {

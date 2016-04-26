@@ -36,6 +36,7 @@ import android.graphics.PointF;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Hex {
     /*
@@ -68,29 +69,84 @@ public class Hex {
 
     static final int maxImageWidth = 150, maxImageHeight = 150, imageX = 100, imageY = 10;
     static final int textX = 260, textY = 200;
-    static final int maxMeepleWidth = 150, maxMeepleHeight = 150, meepleX = 100, meepleY = 180;
+    static final int maxMeepleWidth = 100, maxMeepleHeight = 100, meepleX = 100, meepleY = 180;
 
-    static Resources resources;
+    static HashMap<Integer, Bitmap> tileTypeBitmaps = new HashMap<>();
+    static Bitmap hex = null;
+    static Bitmap genericMeeple;
+    static Bitmap[] playerMeeples;
+    static boolean initialized = false;
 
     int rCoord, gCoord;
-    Location location;
+    private Location location;
     private Bitmap image;
-    private Bitmap meepleBitmap = null;
-    ArrayList<Integer> playersPresent;
+    boolean upToDate;
+    private ArrayList<Integer> playersPresent;
 
-    int numResources;
-    int resourceTypeColor;
+    private int resourceID;
+    private int numResources;
+    private int resourceTypeColor;
 
-    public Hex(int rCoord, int gCoord, Resources _resources, int resourceID, int numResources,
+    final int[] meepleXOffsets = {0, -45, 45};
+    final int meepleYOffset = 15;
+
+    public Hex(int rCoord, int gCoord, Resources resources, int resourceID, int numResources,
                int resourceTypeColor) {
         this.rCoord = rCoord;
         this.gCoord = gCoord;
-        Bitmap hex = BitmapFactory.decodeResource(_resources, R.drawable.hex);
+        if(!initialized) {
+            hex = BitmapFactory.decodeResource(resources, R.drawable.hex);
+            tileTypeBitmaps.put(resourceID, BitmapFactory.decodeResource(resources, resourceID));
+            genericMeeple = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples = new Bitmap[6];
+            playerMeeples[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p1meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p2meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p3meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p4meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p5meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+            playerMeeples[5] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p6meeple),
+                    maxMeepleWidth, maxMeepleHeight, false);
+        }
+        this.numResources = numResources;
+        this.resourceTypeColor = resourceTypeColor;
+        location = new Location(rCoord, gCoord);
+        playersPresent = new ArrayList<>();
+        upToDate = false;
+        this.resourceID = resourceID;
+    }
+
+    public PointF getCenter() {
+        return hexCoordsToRect(this.rCoord, this.gCoord);
+    }
+
+    public void playerIsPresent(int playerNum) {
+        if(!playersPresent.contains(playerNum)) {
+            playersPresent.add(playerNum);
+            upToDate = false;
+        }
+    }
+
+    public void draw(Canvas canvas) {
+
+        if(!upToDate) {
+            createImage();
+        }
+        PointF center = getCenter();
+        float offsetX = center.x - .5f * hexWidth, offsetY = center.y - .5f * hexHeight;
+        canvas.drawBitmap(image, offsetX, offsetY, null);
+
+    }
+
+    public void createImage() {
+
         this.image = Bitmap.createBitmap(hexWidth - horizontalGap, hexHeight - verticalGap, hex.getConfig());
         Canvas canvas = new Canvas(this.image);
-        if(resources == null) {
-            resources = _resources;
-        }
 
         Matrix hexMatrix = new Matrix();
         float[] fromVector = {0f, 0f, hex.getWidth(), hex.getHeight()};
@@ -99,67 +155,27 @@ public class Hex {
         canvas.drawBitmap(hex, hexMatrix, null);
 
         Matrix imageMatrix = new Matrix();
-        Bitmap picture = BitmapFactory.decodeResource(_resources, resourceID);
+        Bitmap picture = tileTypeBitmaps.get(resourceID);
         float scale = Math.min((float)maxImageWidth / picture.getWidth(), (float)maxImageHeight / picture.getHeight());
         imageMatrix.setScale(scale, scale);
         imageMatrix.postTranslate(imageX, imageY);
         canvas.drawBitmap(picture, imageMatrix, null);
 
-        this.numResources = numResources;
-        this.resourceTypeColor = resourceTypeColor;
-        location = new Location(rCoord, gCoord);
-        playersPresent = new ArrayList<>();
-    }
-
-    public PointF getCenter() {
-        return hexCoordsToRect(this.rCoord, this.gCoord);
-    }
-
-    public void draw(Canvas canvas) {
-        if(image == null) return;
-        PointF center = getCenter();
-        float offsetX = center.x - .5f * hexWidth, offsetY = center.y - .5f * hexHeight;
-        canvas.drawBitmap(image, offsetX, offsetY, null);
         Paint paint = new Paint();
         paint.setColor(resourceTypeColor);
         paint.setTextSize(150);
-        canvas.drawText(numResources + "", offsetX + textX, offsetY + textY, paint);
-        if(meepleBitmap != null) canvas.drawBitmap(meepleBitmap, offsetX + meepleX, offsetY + meepleY, null);
+        canvas.drawText(numResources + "", textX, textY, paint);
+
+        for (int i = 0; i < playersPresent.size(); i++) {
+            canvas.drawBitmap(playerMeeples[playersPresent.get(i)], meepleX + meepleXOffsets[i % 3], meepleY + meepleYOffset * i, null);
+        }
+
+        upToDate = true;
     }
     public Location getLocation() {
         return location;
     }
 
-    public void setMeeple(int playerNumber) {
-        int meepleResourceID;
-        switch (playerNumber) {
-            case 0:
-                meepleResourceID = R.drawable.p1meeple;
-                break;
-            case 1:
-                meepleResourceID = R.drawable.p2meeple;
-                break;
-            case 2:
-                meepleResourceID = R.drawable.p3meeple;
-                break;
-            case 3:
-                meepleResourceID = R.drawable.p4meeple;
-                break;
-            case 4:
-                meepleResourceID = R.drawable.p5meeple;
-                break;
-            case 5:
-                meepleResourceID = R.drawable.p6meeple;
-                break;
-            default:
-                meepleResourceID = R.drawable.meeple;
-        }
-        meepleBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, meepleResourceID),
-                maxMeepleWidth, maxMeepleHeight, false);
-        if(playerNumber == -1) {
-            meepleBitmap = null;
-        }
-    }
 
     public static PointF rectCoordsToHex(float x, float y) {
         float r = (x * 4) / (3 * hexWidth);
@@ -213,6 +229,9 @@ public class Hex {
     }
 
     public void setResourceCount(int numResources) {
-        this.numResources = numResources;
+        if(this.numResources != numResources) {
+            this.numResources = numResources;
+            upToDate = false;
+        }
     }
 }
