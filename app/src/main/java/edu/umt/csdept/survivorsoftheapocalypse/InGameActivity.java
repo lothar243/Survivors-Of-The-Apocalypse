@@ -23,6 +23,7 @@ public class InGameActivity extends Activity {
     public static final String NUM_PLAYERS = "survivorsoftheapocalypse.NUM_PLAYERS";
     public static final String BOARD_WIDTH = "survivorsoftheapocalypse.BOARD_WIDTH";
     public static final String BOARD_HEIGHT = "survivorsoftheapocalypse.BOARD_HEIGHT";
+    public static final String GAME_STATE = "survivorsoftheapocalypse.GAMESTATE";
 
     GameBoardView gameBoardView;
     GameState gameState;
@@ -46,36 +47,48 @@ public class InGameActivity extends Activity {
 
     ViewGroup locationPrompt;
 
+    int boardWidth = 4;
+    int boardHeight = 4;
+    int numPlayers = 2;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BOARD_WIDTH, boardWidth);
+        outState.putInt(BOARD_HEIGHT, boardHeight);
+        outState.putInt(NUM_PLAYERS, numPlayers);
+        outState.putSerializable(GAME_STATE, gameState);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // default values
-        int boardWidth = 4;
-        int boardHeight = 4;
-        int numPlayers = 2;
-
-        try {
-            // read the arguments set when creating the intent
-            Intent intent = getIntent();
-            boardWidth = intent.getIntExtra(BOARD_WIDTH, 5);
-            boardHeight = intent.getIntExtra(BOARD_HEIGHT, 5);
-            numPlayers = intent.getIntExtra(NUM_PLAYERS, 2);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         Resources resources = getResources();
-        ArrayList<CardCount> testCounts = GameXMLReader.readCardCount(resources);
-        Log.d(NAME, "Reading cardCounts");
-        for (int i = 0; i < testCounts.size(); i++) {
-            Log.d(NAME, testCounts.get(i).toString());
+
+        if(savedInstanceState == null) {
+            // not resuming a previous instance state
+            try {
+                // read the arguments set when creating the intent
+                Intent intent = getIntent();
+                boardWidth = intent.getIntExtra(BOARD_WIDTH, 5);
+                boardHeight = intent.getIntExtra(BOARD_HEIGHT, 5);
+                numPlayers = intent.getIntExtra(NUM_PLAYERS, 2);
+                gameState = new GameState(this, boardWidth, boardHeight, numPlayers,
+                        GameXMLReader.readTileCards(resources),
+                        GameXMLReader.readCardCount(resources));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            // resuming a previous instance
+            Log.d(NAME, "Reloading a previous gamestate");
+            gameState = (GameState)savedInstanceState.getSerializable(GAME_STATE);
+            gameState.activity = this;
         }
 
-        gameState = new GameState(this, boardWidth, boardHeight, numPlayers,
-                GameXMLReader.readTileCards(resources),
-                GameXMLReader.readCardCount(resources));
 
         Tile[][] boardLayout = gameState.getBoardLayout();
 
@@ -176,6 +189,8 @@ public class InGameActivity extends Activity {
         locationPrompt.setVisibility(View.VISIBLE);
         currentPlayerAction = PossibleActions.harvesting;
     }
+
+
 
     public void onBoardPress(Point indices) {
         switch (currentPlayerAction) {

@@ -3,13 +3,14 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.graphics.Point;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by sinless on 2/11/16.
  */
-class Location{
+class Location implements Serializable{
 
     int xlocation;
     int ylocation;
@@ -51,7 +52,7 @@ class Location{
 
 }
 
-class CardCount {
+class CardCount implements Serializable{
     String name;
     int count;
 
@@ -73,10 +74,10 @@ class CardCount {
     }
 }
 
-public class GameState {
+public class GameState implements Serializable{
     public static final int WALLCOST = 2;
     private static final int TURNCOUNT = 4;
-    InGameActivity activity;
+    transient InGameActivity activity;
     HashMap<String, Tile>  tileMap;
     String[][] tileNames;
     int[][] tileResources;

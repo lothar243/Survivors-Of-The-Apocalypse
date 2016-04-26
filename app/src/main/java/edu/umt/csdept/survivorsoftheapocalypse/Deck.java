@@ -2,6 +2,7 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.graphics.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +11,7 @@ import java.util.Random;
 /**
  * Created by sinless on 2/10/16.
  */
-public class Deck<T> {
+public class Deck<T> implements Serializable{
     private ArrayList<T> stack;
     private Bitmap image;
 
