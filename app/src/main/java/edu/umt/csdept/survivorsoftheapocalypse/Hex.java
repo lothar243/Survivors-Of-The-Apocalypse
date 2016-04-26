@@ -70,11 +70,13 @@ public class Hex {
     static final int maxImageWidth = 150, maxImageHeight = 150, imageX = 100, imageY = 10;
     static final int textX = 260, textY = 200;
     static final int maxMeepleWidth = 100, maxMeepleHeight = 100, meepleX = 100, meepleY = 180;
+    static final int wallWidth = 200, wallHeight = 150, wallX = 50, wallY = 180;
 
     static HashMap<Integer, Bitmap> tileTypeBitmaps = new HashMap<>();
     static Bitmap hex = null;
     static Bitmap genericMeeple;
     static Bitmap[] playerMeeples;
+    static Bitmap wallBitmap;
     static boolean initialized = false;
 
     int rCoord, gCoord;
@@ -86,6 +88,7 @@ public class Hex {
     private int resourceID;
     private int numResources;
     private int resourceTypeColor;
+    private boolean wallPresent = false;
 
     final int[] meepleXOffsets = {0, -45, 45};
     final int meepleYOffset = 15;
@@ -112,6 +115,8 @@ public class Hex {
                     maxMeepleWidth, maxMeepleHeight, false);
             playerMeeples[5] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.p6meeple),
                     maxMeepleWidth, maxMeepleHeight, false);
+            wallBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.wall),
+                    wallWidth, wallHeight, false);
         }
         this.numResources = numResources;
         this.resourceTypeColor = resourceTypeColor;
@@ -168,6 +173,9 @@ public class Hex {
 
         for (int i = 0; i < playersPresent.size(); i++) {
             canvas.drawBitmap(playerMeeples[playersPresent.get(i)], meepleX + meepleXOffsets[i % 3], meepleY + meepleYOffset * i, null);
+        }
+        if(wallPresent) {
+            canvas.drawBitmap(wallBitmap, wallX, wallY, null);
         }
 
         upToDate = true;
@@ -231,6 +239,13 @@ public class Hex {
     public void setResourceCount(int numResources) {
         if(this.numResources != numResources) {
             this.numResources = numResources;
+            upToDate = false;
+        }
+    }
+
+    public void setWall(boolean wallPresent) {
+        if(this.wallPresent != wallPresent) {
+            this.wallPresent = wallPresent;
             upToDate = false;
         }
     }

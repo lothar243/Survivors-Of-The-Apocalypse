@@ -86,6 +86,9 @@ public class InGameActivity extends Activity {
                     gameState.PlaceTile(drawnTile, new Location(i, j));
             }
         }
+        for (int i = 0; i < boardLayout.length; i++) {
+            gameState.wallLocations.add(new Location(i, 0));
+        }
 
         gameBoardView = new GameBoardView(this, gameState);
 

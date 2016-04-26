@@ -76,6 +76,10 @@ public class GameBoard {
                 hexes.get(location.xlocation).get(location.ylocation).playerIsPresent(playerNum);
             }
         }
+        // place walls
+        for(Location wallLocation: gameState.wallLocations) {
+            hexes.get(wallLocation.xlocation).get(wallLocation.ylocation).setWall(true);
+        }
         upToDate = true;
     }
 
