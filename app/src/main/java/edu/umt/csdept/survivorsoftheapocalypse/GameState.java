@@ -74,7 +74,7 @@ class CardCount {
 }
 
 public class GameState {
-    private static final int WALLCOST = 2;
+    public static final int WALLCOST = 2;
     private static final int TURNCOUNT = 4;
     InGameActivity activity;
     HashMap<String, Tile>  tileMap;
@@ -342,7 +342,7 @@ public class GameState {
         boolean validAction = false;
 
         if(checkPresence(currentPlayerIdx, location)){
-            if (players.get(currentPlayerIdx).woodCount >=2) {
+            if (players.get(currentPlayerIdx).woodCount >= WALLCOST) {
                 addWall(location);
                 players.get(currentPlayerIdx).woodCount -= WALLCOST;
                 validAction = true;

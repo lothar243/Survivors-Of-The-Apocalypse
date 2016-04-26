@@ -27,7 +27,7 @@ public class InGameActivity extends Activity {
     GameBoardView gameBoardView;
     GameState gameState;
 
-    enum PossibleActions {decidingAction, buyingPerson, choosingCardLocation, harvesting}
+    enum PossibleActions {decidingAction, buyingPerson, choosingCardLocation, harvesting, buildingWall}
     PossibleActions currentPlayerAction;
 
     PlayerCard currentCard;
@@ -41,6 +41,7 @@ public class InGameActivity extends Activity {
 
     Button drawCardButton;
     ImageView buyPersonButton;
+    ImageView buildWallButton;
     ImageView harvestButton;
 
     ViewGroup locationPrompt;
@@ -86,9 +87,6 @@ public class InGameActivity extends Activity {
                     gameState.PlaceTile(drawnTile, new Location(i, j));
             }
         }
-        for (int i = 0; i < boardLayout.length; i++) {
-            gameState.wallLocations.add(new Location(i, 0));
-        }
 
         gameBoardView = new GameBoardView(this, gameState);
 
@@ -128,6 +126,14 @@ public class InGameActivity extends Activity {
             }
         });
 
+        buildWallButton = (ImageView)sidePanel.findViewById(R.id.build_wall);
+        buildWallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildWall();
+            }
+        });
+
         harvestButton = (ImageView)sidePanel.findViewById(R.id.harvest);
         harvestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +164,11 @@ public class InGameActivity extends Activity {
         sidePanel.setVisibility(View.INVISIBLE);
         locationPrompt.setVisibility(View.VISIBLE);
         currentPlayerAction = PossibleActions.buyingPerson;
+    }
+
+    public void buildWall() {
+        setSideBarPromptForLocation(true);
+        currentPlayerAction = PossibleActions.buildingWall;
     }
 
     public void harvestResource() {
@@ -193,13 +204,24 @@ public class InGameActivity extends Activity {
                 refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
+            case buildingWall:
+                if(gameState.buildWall(new Location(indices))) {
+                    Toast.makeText(this, "Wall built", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "Must have " + GameState.WALLCOST + " wood and be present to build", Toast.LENGTH_SHORT).show();
+                }
 
+                setSideBarPromptForLocation(false);
+                currentPlayerAction = PossibleActions.decidingAction;
+                refreshViews();
         }
     }
 
     private void setSideBarPromptForLocation(boolean prompting) {
         if(prompting) {
-
+            sidePanel.setVisibility(View.INVISIBLE);
+            locationPrompt.setVisibility(View.VISIBLE);
         }
         else {
             sidePanel.setVisibility(View.VISIBLE);
