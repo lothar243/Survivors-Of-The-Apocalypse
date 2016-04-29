@@ -353,4 +353,8 @@ public class GameState {
     public void addWall(Location location) {
         wallLocations.add(location);
     }
+
+    public int getPlayerCount() {
+        return players.size();
+    }
 }

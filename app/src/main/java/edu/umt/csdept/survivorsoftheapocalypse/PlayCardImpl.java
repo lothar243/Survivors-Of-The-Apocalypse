@@ -1,5 +1,7 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import java.util.ArrayList;
+
 /**
  * Created by sinless on 3/4/16.
  */
@@ -90,4 +92,56 @@ class ForestFire extends PlayerCard{
     public void onPlay(GameState gameState) {
         gameState.incrementResources("Forest", -1);
     }
+}
+
+class Zombies extends PlayerCard {
+
+    public Zombies() {
+        CardName = "ZOMBIES!!";
+    }
+
+    @Override
+    public void onAquire(GameState gameState) {
+        onPlay(gameState);
+    }
+
+    @Override
+    public void onPlay(GameState gameState) {
+        for (int i = 0; i < gameState.getPlayerCount(); i++) {
+            ArrayList<Location> playerLocations = gameState.getPlayerLocation(i);
+            ArrayList<Location> wallLocations = gameState.wallLocations;
+            for (Location location : playerLocations) {
+                if (!wallLocations.contains(location)) {
+                    gameState.removePerson(i, location);
+                }
+            }
+
+        }
+    }
+}
+    class Raiders extends PlayerCard {
+
+        public Raiders() {
+            CardName = "RAIDERS!!";
+        }
+
+        @Override
+        public void onAquire(GameState gameState) {
+            onPlay(gameState);
+        }
+
+        @Override
+        public void onPlay(GameState gameState) {
+            for (int i = 0; i < gameState.getPlayerCount(); i++) {
+                ArrayList<Location> playerLocations = gameState.getPlayerLocation(i);
+                ArrayList<Location> wallLocations = gameState.wallLocations;
+                for (Location location : playerLocations) {
+                    if (!wallLocations.contains(location)) {
+                        gameState.removePerson(i, location);
+                    }
+                }
+
+            }
+        }
+
 }

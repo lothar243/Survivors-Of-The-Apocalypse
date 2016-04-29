@@ -30,6 +30,13 @@ public class PlayCardFactory {
         else if(cardName.equalsIgnoreCase("Locust Swarm")){
             playerCard = new LocustSwarm();
         }
+        else if(cardName.equalsIgnoreCase("Raiders")){
+            playerCard = new LocustSwarm();
+        }
+        else if(cardName.equalsIgnoreCase("Zombies")){
+            playerCard = new LocustSwarm();
+        }
+
         return playerCard;
     }
 }
