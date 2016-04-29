@@ -137,6 +137,10 @@ public class GameState implements Serializable{
         activity.promptForLocation(cardToBePlayed);
     }
 
+    public void notifyActivityTilesChanged() {
+        activity.notifyTilesChanged();
+    }
+
     public void createPlayerDeck(ArrayList<CardCount> cardList){
         PlayCardFactory cardFactory = PlayCardFactory.getInstance();
         for (CardCount cardCount : cardList) {

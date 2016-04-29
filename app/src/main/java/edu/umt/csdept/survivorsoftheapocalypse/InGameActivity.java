@@ -196,7 +196,7 @@ public class InGameActivity extends Activity {
         switch (currentPlayerAction) {
             case choosingCardLocation:
                 String tileName = gameState.getTileNameAtLocation(new Location(indices));
-                if(!(tileName == null || tileName.equals(""))) {
+                if(!(tileName == null || tileName.equals("")) && currentCard != null) {
                     currentCard.onPlay(gameState, new Location(indices));
                     setSideBarPromptForLocation(false);
                     currentCard = null;
@@ -257,5 +257,8 @@ public class InGameActivity extends Activity {
         Toast.makeText(this, drawnCard.getCardName() + " drawn", Toast.LENGTH_SHORT).show();
     }
 
-
+    public void notifyTilesChanged() {
+        if(gameBoardView != null && gameBoardView.gameBoard != null)
+            gameBoardView.gameBoard.invalidateHexes();
+    }
 }

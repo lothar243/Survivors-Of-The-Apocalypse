@@ -130,10 +130,25 @@ public class Hex {
         return hexCoordsToRect(this.rCoord, this.gCoord);
     }
 
-    public void playerIsPresent(int playerNum) {
-        if(!playersPresent.contains(playerNum)) {
-            playersPresent.add(playerNum);
-            upToDate = false;
+    public void setPlayerPresence(int playerNum, boolean present) {
+        int index = playersPresent.indexOf(playerNum);
+        if(index == -1) {
+            // the player wasn't present already
+            if(present) {
+                // add the player
+                upToDate = false;
+                playersPresent.add(playerNum);
+            }
+            // else do nothing
+        }
+        else {
+            // the player was present already
+            if(!present) {
+                // remove the player
+                upToDate = false;
+                playersPresent.remove(index);
+            }
+            // else do nothing
         }
     }
 
@@ -248,5 +263,9 @@ public class Hex {
             this.wallPresent = wallPresent;
             upToDate = false;
         }
+    }
+
+    public void invalidate() {
+        upToDate = false;
     }
 }

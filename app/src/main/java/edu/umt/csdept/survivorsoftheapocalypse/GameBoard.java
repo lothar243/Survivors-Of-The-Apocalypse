@@ -15,7 +15,6 @@ public class GameBoard {
     private static final String NAME = "GameBoard";
     boolean upToDate = false;
     ArrayList<ArrayList<Hex>> hexes;
-    enum BoardShape {DIAMOND, BIG_HEX, SQUARE}
     Resources resources;
     GameState gameState;
 
@@ -71,9 +70,21 @@ public class GameBoard {
         }
         // place meeples on hexes
         for (int playerNum = 0; playerNum < gameState.players.size(); playerNum++) {
+            // create a boolean array to update player locations
+            boolean[][] locationArray = new boolean[hexes.size()][];
+            for (int i = 0; i < locationArray.length; i++) {
+                locationArray[i] = new boolean[hexes.get(i).size()];
+            }
+
             ArrayList<Location> playerLocations = gameState.getPlayerLocation(playerNum);
             for(Location location: playerLocations) {
-                hexes.get(location.xlocation).get(location.ylocation).playerIsPresent(playerNum);
+                locationArray[location.xlocation][location.ylocation] = true;
+            }
+
+            for (int i = 0; i < locationArray.length; i++) {
+                for (int j = 0; j < locationArray[i].length; j++) {
+                    hexes.get(i).get(j).setPlayerPresence(playerNum, locationArray[i][j]);
+                }
             }
         }
         // place walls
@@ -102,7 +113,14 @@ public class GameBoard {
         }
     }
 
-    public void invalidate() {
+    public void invalidateBoard() {
         upToDate = false;
+    }
+    public void invalidateHexes() {
+        for(ArrayList<Hex> row: hexes) {
+            for(Hex hex: row) {
+                hex.invalidate();
+            }
+        }
     }
 }

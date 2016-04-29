@@ -52,14 +52,9 @@ class HiddenStores extends PlayerCard{
 
     @Override
     public void onPlay(GameState gameState) {
-        gameState.promptActivityForLocation(this); // use this to cause the activity to prompt the user
         gameState.incrementResources("City", 1);
     }
 
-    @Override
-    public void onPlay(GameState gameState, Location location) {
-        // custom behavior after the location has been selected
-    }
 }
 
 class LocustSwarm extends PlayerCard{
@@ -117,6 +112,7 @@ class Zombies extends PlayerCard {
             }
 
         }
+        gameState.notifyActivityTilesChanged();
     }
 }
     class Raiders extends PlayerCard {
@@ -162,4 +158,11 @@ class GreatWall extends PlayerCard{
         gameState.promptActivityForLocation(this);
 
     }
+
+    @Override
+    public void onPlay(GameState gameState, Location location) {
+        // this is called as a result of the gamestate.promptActivityForLocation after the location has been chosen
+        gameState.addWall(location);
+    }
+
 }
