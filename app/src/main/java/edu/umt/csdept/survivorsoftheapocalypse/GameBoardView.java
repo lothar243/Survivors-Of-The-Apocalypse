@@ -119,6 +119,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                 // forget the the previous touch
                 initialTouchPosition = null;
                 lastTouchPositions = null;
+                invalidateGameBoard();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // allow zoom/translate/rotate, but not skew, so only paying attention to the first two touch points
@@ -129,12 +130,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     currentTouchPositions[2 * i] = event.getX(i);
                     currentTouchPositions[2 * i + 1] = event.getY(i);
                 }
-                if(currentTouchPositions.length != lastTouchPositions.length) {
-                    // a new touch point has been added or removed, so not moving the screen
-                    // do nothing
-//                    Log.d(NAME, "pointerCount changed");
-                }
-                else {
+                if(currentTouchPositions.length == lastTouchPositions.length) {
                     Matrix transformationMatrix = new Matrix();
                     transformationMatrix.setPolyToPoly(lastTouchPositions, 0, currentTouchPositions, 0, numTouchPoints);
                     // alter the canvas so that the last touch points are now in the position of the new touch points
@@ -149,7 +145,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
                     }
 //                    Log.d(NAME, "moving screen");
                 }
-                renderedAtLeastOnce = false;
+                invalidateGameBoard();
                 // getting ready for the next iteration
                 lastTouchPositions = currentTouchPositions;
                 break;
@@ -181,8 +177,6 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
             activity = (InGameActivity)getContext();
         }
         activity.onBoardPress(clickedIndex);
-//        Hex.rectCoordsToHex(imageTouchPoints[0], imageTouchPoints[1]);
-//        Log.d(NAME, "onPress at " + clickedIndex.x + ", " + clickedIndex.y);
     }
 
     public void update() {
@@ -202,5 +196,8 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
 
     public void invalidateGameBoard() {
         gameBoard.invalidate();
+        renderedAtLeastOnce = false;
+        this.postInvalidate();
+        setWillNotDraw(false);
     }
 }

@@ -1,11 +1,12 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sinless on 3/7/16.
  */
-public class Player {
+public class Player implements Serializable{
     ArrayList<Location> locations = new ArrayList<>();
     int woodCount;
     int foodCount;

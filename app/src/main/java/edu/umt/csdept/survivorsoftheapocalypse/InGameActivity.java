@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +23,12 @@ public class InGameActivity extends Activity {
     public static final String NUM_PLAYERS = "survivorsoftheapocalypse.NUM_PLAYERS";
     public static final String BOARD_WIDTH = "survivorsoftheapocalypse.BOARD_WIDTH";
     public static final String BOARD_HEIGHT = "survivorsoftheapocalypse.BOARD_HEIGHT";
+    public static final String GAME_STATE = "survivorsoftheapocalypse.GAMESTATE";
 
     GameBoardView gameBoardView;
     GameState gameState;
 
-    enum PossibleActions {decidingAction, buyingPerson, choosingCardLocation, harvesting}
+    enum PossibleActions {decidingAction, buyingPerson, choosingCardLocation, harvesting, buildingWall}
     PossibleActions currentPlayerAction;
 
     PlayerCard currentCard;
@@ -39,41 +41,54 @@ public class InGameActivity extends Activity {
     TextView playerNameView;
 
     Button drawCardButton;
-    Button buyPersonButton;
-    Button harvestButton;
+    ImageView buyPersonButton;
+    ImageView buildWallButton;
+    ImageView harvestButton;
 
     ViewGroup locationPrompt;
+
+    int boardWidth = 4;
+    int boardHeight = 4;
+    int numPlayers = 2;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BOARD_WIDTH, boardWidth);
+        outState.putInt(BOARD_HEIGHT, boardHeight);
+        outState.putInt(NUM_PLAYERS, numPlayers);
+        outState.putSerializable(GAME_STATE, gameState);
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // default values
-        int boardWidth = 4;
-        int boardHeight = 4;
-        int numPlayers = 2;
-
-        try {
-            // read the arguments set when creating the intent
-            Intent intent = getIntent();
-            boardWidth = intent.getIntExtra(BOARD_WIDTH, 5);
-            boardHeight = intent.getIntExtra(BOARD_HEIGHT, 5);
-            numPlayers = intent.getIntExtra(NUM_PLAYERS, 2);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         Resources resources = getResources();
-        ArrayList<CardCount> testCounts = GameXMLReader.readCardCount(resources);
-        Log.d(NAME, "Reading cardCounts");
-        for (int i = 0; i < testCounts.size(); i++) {
-            Log.d(NAME, testCounts.get(i).toString());
+
+        if(savedInstanceState == null) {
+            // not resuming a previous instance state
+            try {
+                // read the arguments set when creating the intent
+                Intent intent = getIntent();
+                boardWidth = intent.getIntExtra(BOARD_WIDTH, 5);
+                boardHeight = intent.getIntExtra(BOARD_HEIGHT, 5);
+                numPlayers = intent.getIntExtra(NUM_PLAYERS, 2);
+                gameState = new GameState(this, boardWidth, boardHeight, numPlayers,
+                        GameXMLReader.readTileCards(resources),
+                        GameXMLReader.readCardCount(resources));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            // resuming a previous instance
+            Log.d(NAME, "Reloading a previous gamestate");
+            gameState = (GameState)savedInstanceState.getSerializable(GAME_STATE);
+            gameState.activity = this;
         }
 
-        gameState = new GameState(this, boardWidth, boardHeight, numPlayers,
-                GameXMLReader.readTileCards(resources),
-                GameXMLReader.readCardCount(resources));
 
         Tile[][] boardLayout = gameState.getBoardLayout();
 
@@ -116,7 +131,7 @@ public class InGameActivity extends Activity {
             }
         });
 
-        buyPersonButton = (Button)sidePanel.findViewById(R.id.buy_person);
+        buyPersonButton = (ImageView)sidePanel.findViewById(R.id.buy_person);
         buyPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +139,15 @@ public class InGameActivity extends Activity {
             }
         });
 
-        harvestButton = (Button)sidePanel.findViewById(R.id.harvest);
+        buildWallButton = (ImageView)sidePanel.findViewById(R.id.build_wall);
+        buildWallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildWall();
+            }
+        });
+
+        harvestButton = (ImageView)sidePanel.findViewById(R.id.harvest);
         harvestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,11 +179,18 @@ public class InGameActivity extends Activity {
         currentPlayerAction = PossibleActions.buyingPerson;
     }
 
+    public void buildWall() {
+        setSideBarPromptForLocation(true);
+        currentPlayerAction = PossibleActions.buildingWall;
+    }
+
     public void harvestResource() {
         sidePanel.setVisibility(View.INVISIBLE);
         locationPrompt.setVisibility(View.VISIBLE);
         currentPlayerAction = PossibleActions.harvesting;
     }
+
+
 
     public void onBoardPress(Point indices) {
         switch (currentPlayerAction) {
@@ -168,33 +198,45 @@ public class InGameActivity extends Activity {
                 String tileName = gameState.getTileNameAtLocation(new Location(indices));
                 if(!(tileName == null || tileName.equals(""))) {
                     currentCard.onPlay(gameState, new Location(indices));
-                    sideBarPromptForLocation(false);
+                    setSideBarPromptForLocation(false);
                     currentCard = null;
                 }
                 break;
             case buyingPerson:
                 Log.d(NAME, "Placing person at " + indices);
                 gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
-                sideBarPromptForLocation(false);
+                setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
+                refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
             case harvesting:
                 Log.d(NAME, "Collecting resources from " + indices);
                 if(!gameState.collectResources(new Location(indices)))
                     Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
-                sideBarPromptForLocation(false);
-                sidePanel.invalidate();
+                setSideBarPromptForLocation(false);
+                gameBoardView.invalidateGameBoard();
                 refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
+            case buildingWall:
+                if(gameState.buildWall(new Location(indices))) {
+                    Toast.makeText(this, "Wall built", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "Must have " + GameState.WALLCOST + " wood and be present to build", Toast.LENGTH_SHORT).show();
+                }
 
+                setSideBarPromptForLocation(false);
+                currentPlayerAction = PossibleActions.decidingAction;
+                refreshViews();
         }
     }
 
-    private void sideBarPromptForLocation(boolean prompting) {
+    private void setSideBarPromptForLocation(boolean prompting) {
         if(prompting) {
-
+            sidePanel.setVisibility(View.INVISIBLE);
+            locationPrompt.setVisibility(View.VISIBLE);
         }
         else {
             sidePanel.setVisibility(View.VISIBLE);

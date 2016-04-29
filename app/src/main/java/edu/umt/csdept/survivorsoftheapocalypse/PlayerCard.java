@@ -3,10 +3,12 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Created by sinless on 2/25/16.
  */
-public abstract class PlayerCard implements Card {
+public abstract class PlayerCard implements Card, Serializable {
     private static final String NAME = "PlayerCard";
 
     String CardName;

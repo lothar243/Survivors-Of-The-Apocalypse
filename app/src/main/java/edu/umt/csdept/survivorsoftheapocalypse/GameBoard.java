@@ -1,14 +1,12 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Handle drawing the background
@@ -28,7 +26,7 @@ public class GameBoard {
     }
 
     private void refreshHexes() {
-        Log.d(NAME, "refreshHexes()");
+//        Log.d(NAME, "refreshHexes()");
         Tile[][] boardLayout = gameState.getBoardLayout();
         if(hexes == null) hexes = new ArrayList<>();
         for (int i = 0; i < boardLayout.length; i++) {
@@ -68,20 +66,26 @@ public class GameBoard {
 
                 if(currentRow.size() <= j) currentRow.add(
                         new Hex(i, j, resources, imageResourceID, numResources, resourceTypeColor));
+                else(currentRow.get(j)).setResourceCount(numResources);
             }
         }
         // place meeples on hexes
         for (int playerNum = 0; playerNum < gameState.players.size(); playerNum++) {
             ArrayList<Location> playerLocations = gameState.getPlayerLocation(playerNum);
             for(Location location: playerLocations) {
-                hexes.get(location.xlocation).get(location.ylocation).setMeeple(playerNum);
-                Log.d(NAME, "person at " + location);
+                hexes.get(location.xlocation).get(location.ylocation).playerIsPresent(playerNum);
             }
+        }
+        // place walls
+        for(Location wallLocation: gameState.wallLocations) {
+            hexes.get(wallLocation.xlocation).get(wallLocation.ylocation).setWall(true);
         }
         upToDate = true;
     }
 
     public void update() {
+        if(!upToDate)
+            refreshHexes();
     }
 
     public void draw(Canvas canvas) {

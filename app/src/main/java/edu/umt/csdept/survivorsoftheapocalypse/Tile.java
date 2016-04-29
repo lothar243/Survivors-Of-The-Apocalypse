@@ -2,10 +2,12 @@ package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by sinless on 2/25/16.
  */
-public class Tile implements Card{
+public class Tile implements Card, Serializable{
     private String title;
     private String resource;
     private int banditDanger;
