@@ -15,4 +15,10 @@
     <card
         name = "Locust Swarm"
         Count = "3"/>
+    <card
+        name = "Zombies"
+        Count = "2"/>
+    <card
+        name = "Raiders"
+        Count = "2"/>
 </deck>
