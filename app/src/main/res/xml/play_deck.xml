@@ -16,6 +16,12 @@
         name = "Locust Swarm"
         Count = "3"/>
     <card
+        name = "The Great Wall"
+        Count = "3"/>
+    <card
+        name = "Zombies"
+        Count = "2"/>
+    <card
         name = "Zombies"
         Count = "2"/>
     <card

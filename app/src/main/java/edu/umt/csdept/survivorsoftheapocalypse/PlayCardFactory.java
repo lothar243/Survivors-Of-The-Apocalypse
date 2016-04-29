@@ -31,12 +31,14 @@ public class PlayCardFactory {
             playerCard = new LocustSwarm();
         }
         else if(cardName.equalsIgnoreCase("Raiders")){
-            playerCard = new LocustSwarm();
+            playerCard = new Raiders();
         }
         else if(cardName.equalsIgnoreCase("Zombies")){
+            playerCard = new Zombies();
+        }
+        else if(cardName.equalsIgnoreCase("The Great Wall")){
             playerCard = new LocustSwarm();
         }
-
         return playerCard;
     }
 }

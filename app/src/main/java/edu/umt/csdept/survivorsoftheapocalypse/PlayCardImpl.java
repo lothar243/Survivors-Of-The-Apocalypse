@@ -145,3 +145,21 @@ class Zombies extends PlayerCard {
         }
 
 }
+
+class GreatWall extends PlayerCard{
+    public GreatWall() {
+        CardName = "The Great Wall Rises";
+    }
+
+    @Override
+    public void onAquire(GameState gameState) {
+        onPlay(gameState);
+    }
+
+    @Override
+    public void onPlay(GameState gameState) {
+        //todo this needs to create a wall on selected Location
+        gameState.promptActivityForLocation(this);
+
+    }
+}
