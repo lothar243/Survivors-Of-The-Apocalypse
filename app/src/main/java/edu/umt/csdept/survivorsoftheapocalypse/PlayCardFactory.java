@@ -37,7 +37,7 @@ public class PlayCardFactory {
             playerCard = new Zombies();
         }
         else if(cardName.equalsIgnoreCase("The Great Wall")){
-            playerCard = new LocustSwarm();
+            playerCard = new GreatWall();
         }
         return playerCard;
     }
