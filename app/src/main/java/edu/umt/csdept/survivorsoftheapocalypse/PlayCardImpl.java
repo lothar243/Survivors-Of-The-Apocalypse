@@ -1,6 +1,9 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Created by sinless on 3/4/16.
@@ -102,17 +105,22 @@ class Zombies extends PlayerCard {
 
     @Override
     public void onPlay(GameState gameState) {
-        for (int i = 0; i < gameState.getPlayerCount(); i++) {
-            ArrayList<Location> playerLocations = gameState.getPlayerLocation(i);
+        Location[] locations = gameState.findAllTiles();
+        for (int i = 0; i > locations.length; i++) {
+            Location location = locations[i];
+            ArrayList<Integer> playersPresent = gameState.checkPresence(location);
             ArrayList<Location> wallLocations = gameState.wallLocations;
-            for (Location location : playerLocations) {
-                if (!wallLocations.contains(location)) {
+            if (!wallLocations.contains(location)) {
+                Tile tile = gameState.getTile(location);
+                if (tile.getZombieDanger() > 0) {
                     gameState.removePerson(i, location);
                 }
+            } else {
+                gameState.removeWall(location);
             }
 
+            gameState.notifyActivityTilesChanged();
         }
-        gameState.notifyActivityTilesChanged();
     }
 }
     class Raiders extends PlayerCard {
@@ -125,18 +133,23 @@ class Zombies extends PlayerCard {
         public void onAquire(GameState gameState) {
             onPlay(gameState);
         }
-
         @Override
         public void onPlay(GameState gameState) {
-            for (int i = 0; i < gameState.getPlayerCount(); i++) {
-                ArrayList<Location> playerLocations = gameState.getPlayerLocation(i);
+            Location[] locations = gameState.findAllTiles();
+            for (int i = 0; i > locations.length; i++) {
+                Location location = locations[i];
+                ArrayList<Integer> playersPresent = gameState.checkPresence(location);
                 ArrayList<Location> wallLocations = gameState.wallLocations;
-                for (Location location : playerLocations) {
-                    if (!wallLocations.contains(location)) {
+                if (!wallLocations.contains(location)) {
+                    Tile tile = gameState.getTile(location);
+                    if (tile.getBanditDanger() > 0) {
                         gameState.removePerson(i, location);
                     }
+                } else {
+                    gameState.removeWall(location);
                 }
 
+                gameState.notifyActivityTilesChanged();
             }
         }
 

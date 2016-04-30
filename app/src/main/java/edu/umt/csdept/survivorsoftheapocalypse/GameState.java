@@ -364,4 +364,27 @@ public class GameState implements Serializable{
     public int getPlayerCount() {
         return players.size();
     }
+
+    public Tile getTile(Location location) {
+        String tileName = getTileNameAtLocation(location);
+        return tileMap.get(tileName);
+    }
+    public String getTileResourceType(Location location) {
+        String tileName = getTileNameAtLocation(location);
+        return tileMap.get(tileName).getResource();
+    }
+
+    public ArrayList<Integer> checkPresence(Location location){
+        ArrayList<Integer> playersPresent =new ArrayList<>();
+        for(int i = 0; i<players.size();i++) {
+            if (players.get(i).checkPresence(location)) {
+                playersPresent.add(i);
+            }
+        }
+        return playersPresent;
+    }
+
+    public void removeWall(Location location) {
+        wallLocations.remove(location);
+    }
 }
