@@ -39,6 +39,9 @@ public class PlayCardFactory {
         else if(cardName.equalsIgnoreCase("The Great Wall")){
             playerCard = new GreatWall();
         }
+        else if( cardName.equalsIgnoreCase("ScoreCard")){
+            playerCard = new ScoreCard();
+        }
         return playerCard;
     }
 }

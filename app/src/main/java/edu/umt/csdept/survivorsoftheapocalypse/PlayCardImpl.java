@@ -178,4 +178,31 @@ class GreatWall extends PlayerCard{
         gameState.addWall(location);
     }
 
+
+
+}
+class ScoreCard extends PlayerCard{
+    public ScoreCard() {
+        CardName = "Score Card";
+    }
+
+    @Override
+    public void onAquire(GameState gameState) {
+        onPlay(gameState);
+    }
+
+    @Override
+    public void onPlay(GameState gameState) {
+        ArrayList<Integer> scores = new ArrayList<>();
+        for(int i = 0; i < gameState.players.size(); i++){
+            int score = 0;
+            Player current = gameState.players.get(i);
+            score += current.getFoodCount();
+            score+= current.getWoodCount();
+            score += current.getUnitCount()*3;
+            scores.add(score);
+            //todo get scores out of this
+
+        }
+    }
 }
