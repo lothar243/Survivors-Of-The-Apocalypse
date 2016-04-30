@@ -387,4 +387,12 @@ public class GameState implements Serializable{
         wallLocations.remove(location);
     }
 
+    public boolean buyPerson(Location location){
+        int currentCount = players.get(currentPlayerIdx).getUnitCount();
+        if (players.get(currentPlayerIdx).foodCount >= currentCount){
+            players.get(currentPlayerIdx).foodCount -= currentCount;
+            return addPerson(location);
+        }
+        return false;
+    }
 }
