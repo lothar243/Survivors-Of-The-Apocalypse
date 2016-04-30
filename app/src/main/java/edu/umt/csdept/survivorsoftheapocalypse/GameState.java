@@ -252,12 +252,11 @@ public class GameState implements Serializable{
         tileResources[xVal][yVal] = tile.getResourceCount();
     }
 
-    public boolean GatherResources( int playerIdx, Location location){
+    public boolean GatherResources(int playerIdx, Location location, String type){
         if( players.get(playerIdx).checkPresence(location)){
             if (tileNames[location.xlocation][location.ylocation]!= null){
-                Tile tile = tileMap.get(tileNames[location.xlocation][location.ylocation]);
                 Player player = players.get(playerIdx);
-                player.gatherResource(tile.getResource(), 1);
+                player.gatherResource(type, 1);
                 tileResources[location.xlocation][location.ylocation] -=1;
                 return true;
             }
@@ -289,13 +288,13 @@ public class GameState implements Serializable{
         return currentPlayerActionsTaken +=1;
     }
 
-    public boolean collectResources(Location resourceLocation){
+    public boolean collectResources(Location resourceLocation, String type){
         boolean validLocation = false;
             boolean present =checkPresence(currentPlayerIdx, resourceLocation);
 
             if (present) {
                 if (getTileResources(resourceLocation)>=1){
-                    validLocation = GatherResources(currentPlayerIdx, resourceLocation);
+                    validLocation = GatherResources(currentPlayerIdx, resourceLocation, type);
 
                 }
 
@@ -387,4 +386,5 @@ public class GameState implements Serializable{
     public void removeWall(Location location) {
         wallLocations.remove(location);
     }
+
 }
