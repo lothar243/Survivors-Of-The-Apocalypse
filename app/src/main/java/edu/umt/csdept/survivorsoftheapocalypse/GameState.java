@@ -88,6 +88,7 @@ public class GameState implements Serializable{
     int currentPlayerIdx;
     int currentPlayerActionsTaken;
     static final String NAME = "GameState";
+    ArrayList<CardCount> cardBuilder;
 
 //make player object
 
@@ -95,7 +96,7 @@ public class GameState implements Serializable{
         this.activity = activity;
         tileMap = new HashMap<>();
 
-
+        cardBuilder = cardCounts;
         tileNames = new String[boardX][boardY];
 
         tileResources = new int[boardX][boardY];
@@ -191,6 +192,9 @@ public class GameState implements Serializable{
     }
 
     public PlayerCard drawPlayCard(){
+        if (playerDeck.count() == 0){
+            createPlayerDeck(cardBuilder);
+        }
         Card drawnCard = playerDeck.draw();
         drawnCard.onAquire(this);
         return (PlayerCard) drawnCard;
