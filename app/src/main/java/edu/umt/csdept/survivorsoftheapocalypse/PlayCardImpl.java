@@ -173,9 +173,13 @@ class GreatWall extends PlayerCard{
     }
 
     @Override
-    public void onPlay(GameState gameState, Location location) {
+    public boolean onPlayAtLocation(GameState gameState, Location location) {
         // this is called as a result of the gamestate.promptActivityForLocation after the location has been chosen
-        gameState.addWall(location);
+        if(gameState.tileAtLocation(location) && !gameState.wallAtLocation(location)) {
+            gameState.addWall(location);
+            return true;
+        }
+        else return false;
     }
 
 

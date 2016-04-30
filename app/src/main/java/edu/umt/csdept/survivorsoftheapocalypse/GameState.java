@@ -395,4 +395,16 @@ public class GameState implements Serializable{
         }
         return false;
     }
+
+    public boolean wallAtLocation(Location location) {
+        return wallLocations.contains(location);
+    }
+
+    public boolean tileAtLocation(Location location) {
+        int xCoord = location.xlocation, yCoord = location.ylocation;
+        Log.d(NAME, "xCoord: " + xCoord + ", yCoord: " + yCoord + ", tileNames.length: " + tileNames.length);
+        boolean inArrayBounds = xCoord >= 0 && xCoord < tileNames.length &&
+                yCoord >= 0 && yCoord < tileNames[xCoord].length;
+        return inArrayBounds && tileNames[xCoord][yCoord] != null;
+    }
 }

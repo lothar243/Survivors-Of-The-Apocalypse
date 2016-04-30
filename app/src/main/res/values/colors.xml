@@ -7,4 +7,6 @@
     <color name="foodTextColor">#00EE76</color>
     <color name="woodTextColor">#CD661D</color>
     <color name="wildTextColor">#000000</color>
+
+    <color name="selectResourceColor">#9f9</color>
 </resources>

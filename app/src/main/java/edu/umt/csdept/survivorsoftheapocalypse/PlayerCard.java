@@ -19,8 +19,9 @@ public abstract class PlayerCard implements Card, Serializable {
     @Override
     public abstract void onPlay(GameState gameState);
 
-    public void onPlay(GameState gameState, Location location) {
+    public boolean onPlayAtLocation(GameState gameState, Location location) {
         Log.d(NAME, "played " + CardName + " at " + location.toString());
+        return true;
     }
 
     public String getCardName() {

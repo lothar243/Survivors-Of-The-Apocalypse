@@ -1,8 +1,11 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +53,8 @@ public class InGameActivity extends Activity {
     int boardWidth = 4;
     int boardHeight = 4;
     int numPlayers = 2;
+
+    int dialogChoice;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -192,27 +197,29 @@ public class InGameActivity extends Activity {
 
 
 
-    public void onBoardPress(Point indices) {
+    public void onBoardPress(Location location) {
         switch (currentPlayerAction) {
             case choosingCardLocation:
-                String tileName = gameState.getTileNameAtLocation(new Location(indices));
-                if(!(tileName == null || tileName.equals("")) && currentCard != null) {
-                    currentCard.onPlay(gameState, new Location(indices));
+                if(currentCard.onPlayAtLocation(gameState, location)) {
                     setSideBarPromptForLocation(false);
                     currentCard = null;
                 }
                 break;
             case buyingPerson:
-                Log.d(NAME, "Placing person at " + indices);
-                gameState.placePerson(gameState.currentPlayerIdx, new Location(indices));
+                Log.d(NAME, "Placing person at " + location);
+                gameState.placePerson(gameState.currentPlayerIdx, location);
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
             case harvesting:
-                Log.d(NAME, "Collecting resources from " + indices);
-                if(!gameState.collectResources(new Location(indices)))
+                Log.d(NAME, "Collecting resources from " + location);
+                String resourceType = gameState.getTileResourceType(location);
+                if(resourceType.equals("Wild")) {
+                    chooseResourceTypeDialog(location);
+                }
+                else if(!gameState.collectResources(location, resourceType))
                     Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
@@ -220,7 +227,7 @@ public class InGameActivity extends Activity {
                 currentPlayerAction = PossibleActions.decidingAction;
                 break;
             case buildingWall:
-                if(gameState.buildWall(new Location(indices))) {
+                if(gameState.buildWall(location)) {
                     Toast.makeText(this, "Wall built", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -260,5 +267,57 @@ public class InGameActivity extends Activity {
     public void notifyTilesChanged() {
         if(gameBoardView != null && gameBoardView.gameBoard != null)
             gameBoardView.gameBoard.invalidateHexes();
+    }
+
+    private void chooseResourceTypeDialog(final Location location) {
+        final int selectedBackgroundColor = getResources().getColor(R.color.selectResourceColor);
+        final String[] choices = new String[]{"Food", "Wood"};
+        dialogChoice = -1;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a resource type to gather");
+        builder.setSingleChoiceItems(choices, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialogChoice = which;
+            }
+        });
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gameState.collectResources(location, choices[dialogChoice]);
+                gameBoardView.invalidateGameBoard();
+                refreshViews();
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+
+//        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.resource_type_prompt, null);
+//        builder.setView(viewGroup);
+//        builder.setTitle("Choose a resource type");
+//        final View chooseFood = viewGroup.findViewById(R.id.choose_food);
+//        final View chooseWood = viewGroup.findViewById(R.id.choose_wood);
+//
+//        chooseFood.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseFood.setBackgroundColor(selectedBackgroundColor);
+//                chooseWood.setBackgroundColor(Color.TRANSPARENT);
+//            }
+//        });
+//        chooseWood.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseFood.setBackgroundColor(Color.TRANSPARENT);
+//                chooseWood.setBackgroundColor(selectedBackgroundColor);
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", null);
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if()
+//            }
+//        });
+        builder.create().show();
     }
 }

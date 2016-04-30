@@ -176,7 +176,7 @@ public class GameBoardView extends SurfaceView implements SurfaceHolder.Callback
         if(activity == null) {
             activity = (InGameActivity)getContext();
         }
-        activity.onBoardPress(clickedIndex);
+        activity.onBoardPress(new Location(clickedIndex));
     }
 
     public void update() {
