@@ -113,7 +113,9 @@ class Zombies extends PlayerCard {
             if (!wallLocations.contains(location)) {
                 Tile tile = gameState.getTile(location);
                 if (tile.getZombieDanger() > 0) {
-                    gameState.removePerson(i, location);
+                    for( int j = 0; j< playersPresent.size(); j++) {
+                        gameState.removePerson(j, location);
+                    }
                 }
             } else {
                 gameState.removeWall(location);
@@ -143,7 +145,9 @@ class Zombies extends PlayerCard {
                 if (!wallLocations.contains(location)) {
                     Tile tile = gameState.getTile(location);
                     if (tile.getBanditDanger() > 0) {
-                        gameState.removePerson(i, location);
+                        for( int j = 0; j< playersPresent.size(); j++) {
+                            gameState.removePerson(j, location);
+                        }
                     }
                 } else {
                     gameState.removeWall(location);

@@ -27,4 +27,7 @@
     <card
         name = "Raiders"
         Count = "2"/>
+    <card
+        name = "Score"
+        Count = "1"/>
 </deck>
