@@ -1,5 +1,7 @@
 package edu.umt.csdept.survivorsoftheapocalypse;
 
+import android.util.Log;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,15 +108,21 @@ class Zombies extends PlayerCard {
     @Override
     public void onPlay(GameState gameState) {
         Location[] locations = gameState.findAllTiles();
+        Log.d(CardName, "Start");
+        Log.d(CardName, locations.toString());
         for (int i = 0; i > locations.length; i++) {
             Location location = locations[i];
             ArrayList<Integer> playersPresent = gameState.checkPresence(location);
+            Log.d(CardName, playersPresent.toString());
             ArrayList<Location> wallLocations = gameState.wallLocations;
             if (!wallLocations.contains(location)) {
+                Log.d(CardName, "Start");
                 Tile tile = gameState.getTile(location);
                 if (tile.getZombieDanger() > 0) {
                     for( int j = 0; j< playersPresent.size(); j++) {
-                        gameState.removePerson(j, location);
+                        Log.d(CardName, playersPresent.get(j).toString());
+                        Log.d(CardName, location.toString());
+                        gameState.removePerson(playersPresent.get(j), location);
                     }
                 }
             } else {
@@ -138,15 +146,21 @@ class Zombies extends PlayerCard {
         @Override
         public void onPlay(GameState gameState) {
             Location[] locations = gameState.findAllTiles();
+            Log.d(CardName, "Start");
+            Log.d(CardName, locations.toString());
             for (int i = 0; i > locations.length; i++) {
                 Location location = locations[i];
                 ArrayList<Integer> playersPresent = gameState.checkPresence(location);
+                Log.d(CardName, playersPresent.toString());
                 ArrayList<Location> wallLocations = gameState.wallLocations;
                 if (!wallLocations.contains(location)) {
+                    System.out.println();
                     Tile tile = gameState.getTile(location);
                     if (tile.getBanditDanger() > 0) {
                         for( int j = 0; j< playersPresent.size(); j++) {
-                            gameState.removePerson(j, location);
+                            Log.d(CardName,playersPresent.get(j).toString());
+                            Log.d(CardName, location.toString());
+                            gameState.removePerson(playersPresent.get(j), location);
                         }
                     }
                 } else {

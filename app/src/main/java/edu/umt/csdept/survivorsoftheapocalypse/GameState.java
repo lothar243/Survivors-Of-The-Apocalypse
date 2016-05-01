@@ -192,7 +192,7 @@ public class GameState implements Serializable{
     }
 
     public PlayerCard drawPlayCard(){
-        if (playerDeck.count() == 0){
+        if (playerDeck.count() >=1){
             createPlayerDeck(cardBuilder);
         }
         Card drawnCard = playerDeck.draw();
