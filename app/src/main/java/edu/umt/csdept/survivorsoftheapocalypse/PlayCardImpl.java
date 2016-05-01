@@ -109,8 +109,8 @@ class Zombies extends PlayerCard {
     public void onPlay(GameState gameState) {
         Location[] locations = gameState.findAllTiles();
         Log.d(CardName, "Start");
-        Log.d(CardName, locations.toString());
-        for (int i = 0; i > locations.length; i++) {
+        for (int i = 0; i < locations.length; i++) {
+            Log.d(CardName, locations[i].toString());
             Location location = locations[i];
             ArrayList<Integer> playersPresent = gameState.checkPresence(location);
             Log.d(CardName, playersPresent.toString());
@@ -122,7 +122,10 @@ class Zombies extends PlayerCard {
                     for( int j = 0; j< playersPresent.size(); j++) {
                         Log.d(CardName, playersPresent.get(j).toString());
                         Log.d(CardName, location.toString());
+
                         gameState.removePerson(playersPresent.get(j), location);
+                        ArrayList<Integer> result = gameState.checkPresence(location);
+                        Log.d(CardName, result.toString());
                     }
                 }
             } else {
@@ -147,8 +150,8 @@ class Zombies extends PlayerCard {
         public void onPlay(GameState gameState) {
             Location[] locations = gameState.findAllTiles();
             Log.d(CardName, "Start");
-            Log.d(CardName, locations.toString());
-            for (int i = 0; i > locations.length; i++) {
+            for (int i = 0; i <locations.length; i++) {
+                Log.d(CardName, locations[i].toString());
                 Location location = locations[i];
                 ArrayList<Integer> playersPresent = gameState.checkPresence(location);
                 Log.d(CardName, playersPresent.toString());
@@ -161,6 +164,8 @@ class Zombies extends PlayerCard {
                             Log.d(CardName,playersPresent.get(j).toString());
                             Log.d(CardName, location.toString());
                             gameState.removePerson(playersPresent.get(j), location);
+                            ArrayList<Integer> result = gameState.checkPresence(location);
+                            Log.d(CardName, result.toString());
                         }
                     }
                 } else {
