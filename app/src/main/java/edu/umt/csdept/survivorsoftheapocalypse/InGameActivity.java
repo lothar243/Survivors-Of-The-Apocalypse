@@ -207,7 +207,8 @@ public class InGameActivity extends Activity {
                 break;
             case buyingPerson:
                 Log.d(NAME, "Placing person at " + location);
-                gameState.placePerson(gameState.currentPlayerIdx, location);
+                if(gameState.tileAtLocation(location))
+                    gameState.placePerson(gameState.currentPlayerIdx, location);
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
