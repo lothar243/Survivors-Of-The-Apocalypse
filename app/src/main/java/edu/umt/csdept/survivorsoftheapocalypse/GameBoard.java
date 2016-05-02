@@ -87,9 +87,19 @@ public class GameBoard {
                 }
             }
         }
-        // place walls
+        // update walls
+        boolean[][] wallArray = new boolean[hexes.size()][];
+        for(int i = 0; i < wallArray.length; i++) {
+            wallArray[i] = new boolean[hexes.get(i).size()];
+        }
         for(Location wallLocation: gameState.wallLocations) {
-            hexes.get(wallLocation.xlocation).get(wallLocation.ylocation).setWall(true);
+            wallArray[wallLocation.xlocation][wallLocation.ylocation] = true;
+        }
+        for (int i = 0; i < wallArray.length; i++) {
+            ArrayList<Hex> row = hexes.get(i);
+            for (int j = 0; j < wallArray[i].length; j++) {
+                row.get(j).setWall(wallArray[i][j]);
+            }
         }
         upToDate = true;
     }
