@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ public class InGameActivity extends Activity {
     TextView woodCountView;
     TextView foodCountView;
     TextView playerNameView;
+
+    TextView p0Score, p1Score, p2Score, p3Score, p4Score, p5Score;
 
     Button drawCardButton;
     ImageView buyPersonButton;
@@ -119,12 +122,30 @@ public class InGameActivity extends Activity {
         foodCountView = (TextView)sidePanel.findViewById(R.id.food_amount);
         woodCountView = (TextView)sidePanel.findViewById(R.id.wood_amount);
         playerNameView = (TextView)sidePanel.findViewById(R.id.player_name);
+        p0Score = (TextView)sidePanel.findViewById(R.id.p0_score);
+        p1Score = (TextView)sidePanel.findViewById(R.id.p1_score);
+        p2Score = (TextView)sidePanel.findViewById(R.id.p2_score);
+        p3Score = (TextView)sidePanel.findViewById(R.id.p3_score);
+        p4Score = (TextView)sidePanel.findViewById(R.id.p4_score);
+        p5Score = (TextView)sidePanel.findViewById(R.id.p5_score);
+        switch (numPlayers) {
+            case 2:
+                p2Score.setVisibility(View.GONE);
+            case 3:
+                p3Score.setVisibility(View.GONE);
+            case 4:
+                p4Score.setVisibility(View.GONE);
+            case 5:
+                p5Score.setVisibility(View.GONE);
+
+        }
 
         endTurnButton = (Button)sidePanel.findViewById(R.id.end_turn_button);
         endTurnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameState.endTurn();
+                drawCard();
                 refreshViews();
             }
         });
@@ -166,7 +187,30 @@ public class InGameActivity extends Activity {
     }
 
     public void refreshViews() {
-        playerNameView.setText(gameState.getCurrentPlayerName());
+        playerNameView.setText(gameState.getCurrentPlayerName() + ", Actions: " + gameState.getRemainingActions());
+        switch (gameState.currentPlayerIdx) {
+            case 0:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player0Color));
+                break;
+            case 1:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player1Color));
+                break;
+            case 2:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player2Color));
+                break;
+            case 3:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player3Color));
+                break;
+            case 4:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player4Color));
+                break;
+            case 5:
+                playerNameView.setTextColor(ContextCompat.getColor(this, R.color.player5Color));
+                break;
+            default:
+                playerNameView.setTextColor(Color.BLACK);
+                break;
+        }
         int [] currentPlayerResources = gameState.getCurrentPlayerResources();
         if(currentPlayerResources != null) {
             foodCountView.setText("" + currentPlayerResources[0]);
@@ -175,6 +219,19 @@ public class InGameActivity extends Activity {
         else {
             foodCountView.setText("null");
             woodCountView.setText("null");
+        }
+        switch (numPlayers) {
+            case 6:
+                p5Score.setText("P5: " + gameState.scores[5]);
+            case 5:
+                p4Score.setText("P4: " + gameState.scores[4]);
+            case 4:
+                p3Score.setText("P3: " + gameState.scores[3]);
+            case 3:
+                p2Score.setText("P2: " + gameState.scores[2]);
+            case 2:
+                p1Score.setText("P1: " + gameState.scores[1]);
+                p0Score.setText("P0: " + gameState.scores[0]);
         }
     }
 

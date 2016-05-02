@@ -89,6 +89,7 @@ public class GameState implements Serializable{
     int currentPlayerActionsTaken;
     static final String NAME = "GameState";
     ArrayList<CardCount> cardBuilder;
+    public int[] scores;
 
 //make player object
 
@@ -106,6 +107,7 @@ public class GameState implements Serializable{
         }
 
         currentPlayerIdx = 0;
+        scores = new int[playerCount];
 
         wallLocations = new ArrayList<>();
 

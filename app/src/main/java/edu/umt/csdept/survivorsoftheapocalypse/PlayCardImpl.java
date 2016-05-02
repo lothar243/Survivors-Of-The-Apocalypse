@@ -229,7 +229,7 @@ class ScoreCard extends PlayerCard{
             score += current.getUnitCount()*3;
             scores.add(score);
             //todo get scores out of this
-
+            gameState.scores[gameState.currentPlayerIdx] += score;
         }
     }
 }

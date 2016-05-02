@@ -9,4 +9,11 @@
     <color name="wildTextColor">#000000</color>
 
     <color name="selectResourceColor">#9f9</color>
+
+    <color name="player0Color">#00f</color>
+    <color name="player1Color">#f00</color>
+    <color name="player2Color">#2c9b39</color>
+    <color name="player3Color">#aa0</color>
+    <color name="player4Color">#f800ff</color>
+    <color name="player5Color">#00ffe9</color>
 </resources>
