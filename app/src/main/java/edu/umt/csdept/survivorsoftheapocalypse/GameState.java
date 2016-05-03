@@ -324,12 +324,12 @@ public class GameState implements Serializable{
         return tileResources[location.xlocation][location.ylocation];
     }
 
-    public boolean addPerson(Location location){
+    public boolean addPerson(int playerIdx, Location location){
 
         boolean validAction = false;
 
-        if(!checkPresence(currentPlayerIdx, location)){
-            addPerson(location);
+        if(!checkPresence(playerIdx, location)){
+            players.get(playerIdx).placePerson(location);
             validAction = true;
         }
 
@@ -342,7 +342,7 @@ public class GameState implements Serializable{
         if( currentPlayer.checkPresence(startLocation)) {
             if (tileNames[startLocation.xlocation][startLocation.ylocation] != null) {
                 removePerson(currentPlayerIdx,startLocation);
-                addPerson(endLocation);
+                addPerson(currentPlayerIdx,endLocation);
             }
         }
         return finished;
@@ -396,9 +396,12 @@ public class GameState implements Serializable{
 
     public boolean buyPerson(Location location){
         int currentCount = players.get(currentPlayerIdx).getUnitCount();
-        if (players.get(currentPlayerIdx).foodCount >= currentCount){
-            players.get(currentPlayerIdx).foodCount -= currentCount;
-            return addPerson(location);
+        if (players.get(currentPlayerIdx).foodCount >= currentCount) {
+            boolean sucess = addPerson(currentPlayerIdx,location);
+            if (sucess){
+                players.get(currentPlayerIdx).foodCount -= currentCount;
+            }
+            return  sucess;
         }
         return false;
     }
