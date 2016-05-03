@@ -296,10 +296,10 @@ public class InGameActivity extends Activity {
             case buyingPerson:
                 Log.d(NAME, "Placing person at " + location);
                 if(gameState.tileAtLocation(location)) {
-                    gameState.placePerson(gameState.currentPlayerIdx, location);
-//                    if(!gameState.buyPerson(location)) {
-//                        Toast.makeText(this, "Not enough food", Toast.LENGTH_SHORT).show();
-//                    }
+//                    gameState.placePerson(gameState.currentPlayerIdx, location);
+                    if(!gameState.buyPerson(location)) {
+                        Toast.makeText(this, "Not enough food", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
@@ -308,12 +308,13 @@ public class InGameActivity extends Activity {
                 break;
             case harvesting:
                 Log.d(NAME, "Collecting resources from " + location);
-                String resourceType = gameState.getTileResourceType(location);
-                if(resourceType.equals("Wild")) {
-                    chooseResourceTypeDialog(location);
+                if(gameState.tileAtLocation(location)) {
+                    String resourceType = gameState.getTileResourceType(location);
+                    if (resourceType.equals("Wild")) {
+                        chooseResourceTypeDialog(location);
+                    } else if (!gameState.collectResources(location, resourceType))
+                        Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
                 }
-                else if(!gameState.collectResources(location, resourceType))
-                    Toast.makeText(this, "Unable to collect", Toast.LENGTH_SHORT).show();
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
