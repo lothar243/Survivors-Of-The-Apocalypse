@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by sinless on 2/25/16.
  */
 public abstract class PlayerCard implements Card, Serializable {
-    private static final String NAME = "PlayerCard";
+    protected static final String NAME = "PlayerCard";
 
     String CardName;
     @Override

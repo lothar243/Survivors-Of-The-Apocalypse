@@ -301,7 +301,7 @@ public class GameState implements Serializable{
             if (present) {
                 if (getTileResources(resourceLocation)>=1){
                     validLocation = GatherResources(currentPlayerIdx, resourceLocation, type);
-
+                    if(validLocation) spendAction();
                 }
 
             }
@@ -354,6 +354,7 @@ public class GameState implements Serializable{
         if(checkPresence(currentPlayerIdx, location)){
             if (players.get(currentPlayerIdx).woodCount >= WALLCOST) {
                 addWall(location);
+                spendAction();
                 players.get(currentPlayerIdx).woodCount -= WALLCOST;
                 validAction = true;
             }

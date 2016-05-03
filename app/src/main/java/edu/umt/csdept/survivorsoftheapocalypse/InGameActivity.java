@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -17,8 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class InGameActivity extends Activity {
     public static final String NAME = "InGameActivity";
@@ -141,12 +138,24 @@ public class InGameActivity extends Activity {
         }
 
         endTurnButton = (Button)sidePanel.findViewById(R.id.end_turn_button);
+        final Activity activity = this;
         endTurnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameState.endTurn();
-                drawCard();
-                refreshViews();
+                final int numRemainingActions = gameState.getRemainingActions();
+                if(numRemainingActions > 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Really end your turn with " + numRemainingActions + " actions left?");
+                    builder.setPositiveButton("Yes, I'm done", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            endTurn();
+                        }
+                    });
+                    builder.setNegativeButton("No, wait!", null);
+                    builder.create().show();
+                }
+                else endTurn();
             }
         });
         drawCardButton = (Button)sidePanel.findViewById(R.id.draw_card_button);
@@ -161,7 +170,7 @@ public class InGameActivity extends Activity {
         buyPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buyPerson();
+                startBuyingPerson();
             }
         });
 
@@ -169,7 +178,7 @@ public class InGameActivity extends Activity {
         buildWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buildWall();
+                startBuildingWall();
             }
         });
 
@@ -177,7 +186,7 @@ public class InGameActivity extends Activity {
         harvestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                harvestResource();
+                startHarvestingResources();
             }
         });
         currentPlayerAction = PossibleActions.decidingAction;
@@ -235,24 +244,41 @@ public class InGameActivity extends Activity {
         }
     }
 
-    public void buyPerson() {
+    public void endTurn() {
+        gameState.endTurn();
+        drawCard();
+        refreshViews();
+    }
+
+    public void startBuyingPerson() {
         sidePanel.setVisibility(View.INVISIBLE);
         locationPrompt.setVisibility(View.VISIBLE);
         currentPlayerAction = PossibleActions.buyingPerson;
     }
 
-    public void buildWall() {
-        setSideBarPromptForLocation(true);
-        currentPlayerAction = PossibleActions.buildingWall;
+    public void startBuildingWall() {
+        if(gameState.getRemainingActions() > 0) {
+            setSideBarPromptForLocation(true);
+            currentPlayerAction = PossibleActions.buildingWall;
+        }
+        else {
+            tellUserNotEnoughActions();
+        }
     }
 
-    public void harvestResource() {
-        sidePanel.setVisibility(View.INVISIBLE);
-        locationPrompt.setVisibility(View.VISIBLE);
-        currentPlayerAction = PossibleActions.harvesting;
+    public void startHarvestingResources() {
+        if(gameState.getRemainingActions() > 0) {
+            sidePanel.setVisibility(View.INVISIBLE);
+            locationPrompt.setVisibility(View.VISIBLE);
+            currentPlayerAction = PossibleActions.harvesting;
+        }
+        else
+            tellUserNotEnoughActions();
     }
 
-
+    public void tellUserNotEnoughActions() {
+        Toast.makeText(this, "Not enough actions left", Toast.LENGTH_SHORT).show();
+    }
 
     public void onBoardPress(Location location) {
         switch (currentPlayerAction) {
@@ -264,8 +290,12 @@ public class InGameActivity extends Activity {
                 break;
             case buyingPerson:
                 Log.d(NAME, "Placing person at " + location);
-                if(gameState.tileAtLocation(location))
+                if(gameState.tileAtLocation(location)) {
                     gameState.placePerson(gameState.currentPlayerIdx, location);
+//                    if(!gameState.buyPerson(location)) {
+//                        Toast.makeText(this, "Not enough food", Toast.LENGTH_SHORT).show();
+//                    }
+                }
                 setSideBarPromptForLocation(false);
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
@@ -331,6 +361,7 @@ public class InGameActivity extends Activity {
         final int selectedBackgroundColor = getResources().getColor(R.color.selectResourceColor);
         final String[] choices = new String[]{"Food", "Wood"};
         dialogChoice = -1;
+        final Activity activity = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a resource type to gather");
         builder.setSingleChoiceItems(choices, -1, new DialogInterface.OnClickListener() {
@@ -342,7 +373,8 @@ public class InGameActivity extends Activity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                gameState.collectResources(location, choices[dialogChoice]);
+                if(dialogChoice == -1) Toast.makeText(activity, "No resource selected", Toast.LENGTH_SHORT).show();
+                else gameState.collectResources(location, choices[dialogChoice]);
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
             }
