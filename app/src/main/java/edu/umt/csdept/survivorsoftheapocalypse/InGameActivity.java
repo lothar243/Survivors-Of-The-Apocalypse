@@ -246,8 +246,13 @@ public class InGameActivity extends Activity {
 
     public void endTurn() {
         gameState.endTurn();
-        drawCard();
+        String cardName = drawCard();
         refreshViews();
+        final Activity activity = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(gameState.getCurrentPlayerName() + "'s turn");
+        builder.setMessage(cardName + " drawn");
+        builder.create().show();
     }
 
     public void startBuyingPerson() {
@@ -346,10 +351,11 @@ public class InGameActivity extends Activity {
         sidePanel.setVisibility(View.INVISIBLE);
     }
 
-    public void drawCard() {
+    public String drawCard() {
         PlayerCard drawnCard = gameState.drawPlayCard();
         gameBoardView.invalidateGameBoard();
-        Toast.makeText(this, drawnCard.getCardName() + " drawn", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, drawnCard.getCardName() + " drawn", Toast.LENGTH_SHORT).show();
+        return drawnCard.getCardName();
     }
 
     public void notifyTilesChanged() {
@@ -364,22 +370,39 @@ public class InGameActivity extends Activity {
         final Activity activity = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a resource type to gather");
-        builder.setSingleChoiceItems(choices, -1, new DialogInterface.OnClickListener() {
+//        builder.setSingleChoiceItems(choices, -1, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialogChoice = which;
+//            }
+//        });
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if(dialogChoice == -1) Toast.makeText(activity, "No resource selected", Toast.LENGTH_SHORT).show();
+//                else gameState.collectResources(location, choices[dialogChoice]);
+//                gameBoardView.invalidateGameBoard();
+//                refreshViews();
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton("Cancel", null);
+        builder.setNeutralButton("Wood", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialogChoice = which;
-            }
-        });
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(dialogChoice == -1) Toast.makeText(activity, "No resource selected", Toast.LENGTH_SHORT).show();
-                else gameState.collectResources(location, choices[dialogChoice]);
+                gameState.collectResources(location, "Wood");
                 gameBoardView.invalidateGameBoard();
                 refreshViews();
             }
         });
-        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Food", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gameState.collectResources(location, "Food");
+                gameBoardView.invalidateGameBoard();
+                refreshViews();
+            }
+        });
 
 //        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.resource_type_prompt, null);
 //        builder.setView(viewGroup);

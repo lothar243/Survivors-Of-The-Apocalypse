@@ -228,7 +228,7 @@ class ScoreCard extends PlayerCard{
             score+= current.getWoodCount();
             score += current.getUnitCount()*3;
             scores.add(score);
-            
+
             //todo get scores out of this
             gameState.scores[i] += score;
             Log.d(NAME, "Player " + i + " score increase: " + score);
